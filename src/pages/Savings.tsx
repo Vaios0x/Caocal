@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { 
   Target, 
   PiggyBank, 
@@ -22,7 +23,16 @@ import {
   Award,
   Lightbulb,
   AlertTriangle,
-  BarChart3
+  BarChart3,
+  Settings,
+  Download,
+  Share2,
+  ArrowRight,
+  Edit,
+  Trash2,
+  Play,
+  Pause,
+  RefreshCw
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
 import { Progress } from '@components/ui/Progress';
@@ -343,10 +353,19 @@ const mockInsights: SavingsInsight[] = [
 
 export const Savings: React.FC = () => {
   const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
-    const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [viewMode] = useState<'grid' | 'list'>('grid');
   const [activeTab, setActiveTab] = useState<'goals' | 'strategies' | 'insights'>('goals');
+  const navigate = useNavigate();
+
+  // Estados para modales
+  const [showGoalDetailsModal, setShowGoalDetailsModal] = useState<string | null>(null);
+  const [showStrategyDetailsModal, setShowStrategyDetailsModal] = useState<string | null>(null);
+  const [showInsightDetailsModal, setShowInsightDetailsModal] = useState<string | null>(null);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [showTutorialModal, setShowTutorialModal] = useState(false);
 
   const totalTarget = mockGoals.reduce((sum, goal) => sum + goal.target, 0);
   const totalCurrent = mockGoals.reduce((sum, goal) => sum + goal.current, 0);
@@ -360,7 +379,7 @@ export const Savings: React.FC = () => {
   const averageSuccessRate = mockStrategies.reduce((sum, strategy) => sum + strategy.successRate, 0) / mockStrategies.length;
 
   const handleGoalClick = (goalId: string) => {
-    setSelectedGoal(selectedGoal === goalId ? null : goalId);
+    setShowGoalDetailsModal(goalId);
   };
 
   const handleCreateGoal = () => {
@@ -373,13 +392,59 @@ export const Savings: React.FC = () => {
   };
 
   const handleInsightAction = (insightId: string) => {
-    // Aquí se implementaría la lógica específica para cada insight
-    console.log(`Acción ejecutada para el insight: ${insightId}`);
-    // En el futuro aquí se podría implementar:
-    // - Navegación a detalles del insight
-    // - Aplicar sugerencias automáticamente
-    // - Marcar como leído
-    // - Mostrar más información
+    setShowInsightDetailsModal(insightId);
+  };
+
+  // Nuevas funciones de manejo
+  const handleStrategyClick = (strategyId: string) => {
+    setShowStrategyDetailsModal(strategyId);
+  };
+
+  const handleSettingsClick = () => {
+    setShowSettingsModal(true);
+  };
+
+  const handleReportClick = () => {
+    setShowReportModal(true);
+  };
+
+  const handleTutorialClick = () => {
+    setShowTutorialModal(true);
+  };
+
+  const handleEditGoal = (goalId: string) => {
+    // Navegar a configuración o abrir modal de edición
+    navigate('/settings');
+  };
+
+  const handleDeleteGoal = (goalId: string) => {
+    // Confirmar eliminación
+    if (confirm('¿Estás seguro de que quieres eliminar esta meta?')) {
+      console.log('Meta eliminada:', goalId);
+    }
+  };
+
+  const handleToggleStrategy = (strategyId: string) => {
+    // Toggle activar/desactivar estrategia
+    console.log('Estrategia toggleada:', strategyId);
+  };
+
+  const handleDownloadReport = () => {
+    alert('Reporte descargado exitosamente!');
+    setShowReportModal(false);
+  };
+
+  const handleShareGoal = (goalId: string) => {
+    // Compartir meta
+    if (navigator.share) {
+      navigator.share({
+        title: 'Mi Meta de Ahorro',
+        text: 'Mira mi progreso en esta meta de ahorro',
+        url: window.location.href
+      });
+    } else {
+      alert('Función de compartir no disponible en este navegador');
+    }
   };
 
   return (
@@ -592,6 +657,7 @@ export const Savings: React.FC = () => {
                     variant="ghost"
                     size="sm"
                     className="rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700"
+                    onClick={() => console.log('Filtro: 7 días')}
                   >
                     7 días
                   </Button>
@@ -599,6 +665,7 @@ export const Savings: React.FC = () => {
                     variant="ghost"
                     size="sm"
                     className="rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700"
+                    onClick={() => console.log('Filtro: 14 días')}
                   >
                     14 días
                   </Button>
@@ -606,6 +673,7 @@ export const Savings: React.FC = () => {
                     variant="ghost"
                     size="sm"
                     className="rounded-lg bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/30"
+                    onClick={() => console.log('Filtro: 30 días')}
                   >
                     30 días
                   </Button>
@@ -613,6 +681,7 @@ export const Savings: React.FC = () => {
                     variant="ghost"
                     size="sm"
                     className="rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700"
+                    onClick={() => console.log('Filtro: 90 días')}
                   >
                     90 días
                   </Button>
@@ -643,7 +712,8 @@ export const Savings: React.FC = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
-                  className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group"
+                  className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group cursor-pointer"
+                  onClick={() => handleStrategyClick(strategy.id)}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3 flex-1">
@@ -662,6 +732,37 @@ export const Savings: React.FC = () => {
                         ${strategy.amount > 0 ? strategy.amount : '0'}
                       </p>
                       <p className="text-xs text-slate-500 dark:text-slate-400 capitalize">{strategy.frequency}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between mt-3">
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleStrategy(strategy.id);
+                        }}
+                        className="text-xs"
+                      >
+                        {strategy.isActive ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
+                        {strategy.isActive ? 'Pausar' : 'Activar'}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSettingsClick();
+                        }}
+                        className="text-xs"
+                      >
+                        <Settings className="w-3 h-3" />
+                      </Button>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-medium text-emerald-600">{strategy.successRate}% éxito</p>
+                      <p className="text-xs text-slate-500">${strategy.totalSaved} ahorrado</p>
                     </div>
                   </div>
                 </motion.div>
@@ -694,7 +795,8 @@ export const Savings: React.FC = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
-                    className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group"
+                    className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group cursor-pointer"
+                    onClick={() => handleGoalClick(goal.id)}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3 flex-1">
@@ -713,6 +815,37 @@ export const Savings: React.FC = () => {
                         <p className="text-xs text-slate-500 dark:text-slate-400">
                           {daysLeft > 0 ? `${daysLeft} días` : 'Vencida'}
                         </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between mt-3">
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditGoal(goal.id);
+                          }}
+                          className="text-xs"
+                        >
+                          <Edit className="w-3 h-3" />
+                          Editar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleShareGoal(goal.id);
+                          }}
+                          className="text-xs"
+                        >
+                          <Share2 className="w-3 h-3" />
+                        </Button>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-medium text-blue-600">${goal.current.toLocaleString()}</p>
+                        <p className="text-xs text-slate-500">de ${goal.target.toLocaleString()}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -1009,6 +1142,7 @@ export const Savings: React.FC = () => {
                     size="lg"
                     className="border-success/20 text-success hover:bg-success/10"
                     aria-label="Ver tutorial de ahorro"
+                    onClick={handleTutorialClick}
                   >
                     <Info className="w-5 h-5 mr-2" />
                     Aprender Más
@@ -1296,6 +1430,497 @@ export const Savings: React.FC = () => {
                     className="bg-gradient-to-r from-success to-primary"
                   >
                     {isLoading ? 'Creando...' : 'Crear Meta'}
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Modal de detalles de meta */}
+      <AnimatePresence>
+        {showGoalDetailsModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowGoalDetailsModal(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold">Detalles de Meta</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowGoalDetailsModal(null)}
+                  aria-label="Cerrar modal"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              {showGoalDetailsModal && (() => {
+                const goal = mockGoals.find(g => g.id === showGoalDetailsModal);
+                if (!goal) return null;
+                
+                const progress = (goal.current / goal.target) * 100;
+                const daysLeft = Math.ceil((new Date(goal.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+                
+                return (
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-3">
+                      {getCategoryIcon(goal.category)}
+                      <div>
+                        <h4 className="font-bold text-lg">{goal.name}</h4>
+                        <p className="text-sm text-muted-foreground">{goal.description}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span>Progreso</span>
+                        <span className="font-medium">{progress.toFixed(1)}%</span>
+                      </div>
+                      <Progress value={progress} className="h-2" />
+                      <div className="flex justify-between text-sm">
+                        <span>${goal.current.toLocaleString()} de ${goal.target.toLocaleString()}</span>
+                        <span>Faltan ${(goal.target - goal.current).toLocaleString()}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Prioridad</span>
+                        <p className="font-medium capitalize">{goal.priority}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Fecha límite</span>
+                        <p className="font-medium">{new Date(goal.deadline).toLocaleDateString()}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Días restantes</span>
+                        <p className="font-medium">{daysLeft > 0 ? daysLeft : 'Vencida'}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Contribución mensual</span>
+                        <p className="font-medium">${goal.monthlyContribution?.toLocaleString() || '0'}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between pt-4">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setShowGoalDetailsModal(null);
+                          handleEditGoal(goal.id);
+                        }}
+                      >
+                        <Edit className="w-4 h-4 mr-2" />
+                        Editar
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setShowGoalDetailsModal(null);
+                          handleShareGoal(goal.id);
+                        }}
+                      >
+                        <Share2 className="w-4 h-4 mr-2" />
+                        Compartir
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })()}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Modal de detalles de estrategia */}
+      <AnimatePresence>
+        {showStrategyDetailsModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowStrategyDetailsModal(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold">Detalles de Estrategia</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowStrategyDetailsModal(null)}
+                  aria-label="Cerrar modal"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              {showStrategyDetailsModal && (() => {
+                const strategy = mockStrategies.find(s => s.id === showStrategyDetailsModal);
+                if (!strategy) return null;
+                
+                return (
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-3">
+                      {strategy.icon}
+                      <div>
+                        <h4 className="font-bold text-lg">{strategy.name}</h4>
+                        <p className="text-sm text-muted-foreground">{strategy.description}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Tipo</span>
+                        <p className="font-medium capitalize">{strategy.type}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Frecuencia</span>
+                        <p className="font-medium capitalize">{strategy.frequency}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Cantidad</span>
+                        <p className="font-medium">${strategy.amount.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Tasa de éxito</span>
+                        <p className="font-medium">{strategy.successRate}%</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Total ahorrado</span>
+                        <p className="font-medium">${strategy.totalSaved.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Estado</span>
+                        <p className="font-medium">{strategy.isActive ? 'Activa' : 'Inactiva'}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between pt-4">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setShowStrategyDetailsModal(null);
+                          handleToggleStrategy(strategy.id);
+                        }}
+                      >
+                        {strategy.isActive ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
+                        {strategy.isActive ? 'Pausar' : 'Activar'}
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setShowStrategyDetailsModal(null);
+                          handleSettingsClick();
+                        }}
+                      >
+                        <Settings className="w-4 h-4 mr-2" />
+                        Configurar
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })()}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Modal de detalles de insight */}
+      <AnimatePresence>
+        {showInsightDetailsModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowInsightDetailsModal(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold">Detalles de Insight</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowInsightDetailsModal(null)}
+                  aria-label="Cerrar modal"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              {showInsightDetailsModal && (() => {
+                const insight = mockInsights.find(i => i.id === showInsightDetailsModal);
+                if (!insight) return null;
+                
+                return (
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-3">
+                      {insight.icon}
+                      <div>
+                        <h4 className="font-bold text-lg">{insight.title}</h4>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          insight.priority === 'high' ? 'bg-destructive/10 text-destructive' :
+                          insight.priority === 'medium' ? 'bg-warning/10 text-warning' :
+                          'bg-success/10 text-success'
+                        }`}>
+                          {insight.priority}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <p className="text-muted-foreground">{insight.message}</p>
+                    
+                    {insight.actionable && insight.actionLabel && (
+                      <Button
+                        className="w-full"
+                        onClick={() => {
+                          setShowInsightDetailsModal(null);
+                          navigate('/dashboard');
+                        }}
+                      >
+                        {insight.actionLabel}
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    )}
+                  </div>
+                );
+              })()}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Modal de configuración */}
+      <AnimatePresence>
+        {showSettingsModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowSettingsModal(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold">Configuración de Ahorros</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowSettingsModal(false)}
+                  aria-label="Cerrar modal"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <p className="text-muted-foreground">
+                  Configura tus preferencias de ahorro y automatización.
+                </p>
+                
+                <div className="flex items-center justify-end space-x-3 pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowSettingsModal(false)}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setShowSettingsModal(false);
+                      navigate('/settings');
+                    }}
+                  >
+                    <Settings className="w-4 h-4 mr-2" />
+                    Ir a Configuración
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Modal de reporte */}
+      <AnimatePresence>
+        {showReportModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowReportModal(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold">Descargar Reporte</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowReportModal(false)}
+                  aria-label="Cerrar modal"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <p className="text-muted-foreground">
+                  Selecciona el formato y período para tu reporte de ahorros.
+                </p>
+                
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-sm font-medium">Formato</label>
+                    <select className="w-full p-2 border rounded-lg mt-1">
+                      <option>PDF</option>
+                      <option>CSV</option>
+                      <option>Excel</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm font-medium">Período</label>
+                    <select className="w-full p-2 border rounded-lg mt-1">
+                      <option>Últimos 30 días</option>
+                      <option>Últimos 90 días</option>
+                      <option>Este año</option>
+                      <option>Personalizado</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-end space-x-3 pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowReportModal(false)}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    onClick={handleDownloadReport}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Descargar
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Modal de tutorial */}
+      <AnimatePresence>
+        {showTutorialModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowTutorialModal(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold">Tutorial de Ahorros</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowTutorialModal(false)}
+                  aria-label="Cerrar modal"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <p className="text-muted-foreground">
+                  Aprende cómo maximizar tus ahorros con estrategias inteligentes.
+                </p>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3 p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                    <Target className="w-5 h-5 text-blue-500" />
+                    <div>
+                      <h4 className="font-medium">Crear Metas</h4>
+                      <p className="text-sm text-muted-foreground">Define objetivos claros y medibles</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3 p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                    <Zap className="w-5 h-5 text-emerald-500" />
+                    <div>
+                      <h4 className="font-medium">Estrategias Automáticas</h4>
+                      <p className="text-sm text-muted-foreground">Configura ahorros automáticos</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3 p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                    <TrendingUp className="w-5 h-5 text-purple-500" />
+                    <div>
+                      <h4 className="font-medium">Seguimiento</h4>
+                      <p className="text-sm text-muted-foreground">Monitorea tu progreso</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-end space-x-3 pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowTutorialModal(false)}
+                  >
+                    Cerrar
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setShowTutorialModal(false);
+                      navigate('/education');
+                    }}
+                  >
+                    <Info className="w-4 h-4 mr-2" />
+                    Ver Más Tutoriales
                   </Button>
                 </div>
               </div>
