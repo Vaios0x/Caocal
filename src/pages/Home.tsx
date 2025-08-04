@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { 
   TrendingUp, 
   Shield, 
@@ -27,7 +28,19 @@ import {
   Award,
   Globe,
   Clock,
-  Settings
+  Settings,
+  X,
+  ExternalLink,
+  Download,
+  Mail,
+  Phone,
+  MessageCircle,
+  Info,
+  BookOpen,
+  Calculator,
+  TrendingDown,
+  Plus,
+  Minus
 } from 'lucide-react';
 import { Card, CardContent } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
@@ -133,7 +146,12 @@ const insights = [
 ];
 
 export const Home: React.FC = () => {
+  const navigate = useNavigate();
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [showDemoModal, setShowDemoModal] = useState(false);
+  const [showSecurityModal, setShowSecurityModal] = useState(false);
+  const [showInsightModal, setShowInsightModal] = useState<string | null>(null);
+  const [showFeatureModal, setShowFeatureModal] = useState<string | null>(null);
 
   const nextTestimonial = () => {
     setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
@@ -157,6 +175,30 @@ export const Home: React.FC = () => {
       case 'medium': return 'Medium';
       default: return 'Low';
     }
+  };
+
+  const handleStartFree = () => {
+    navigate('/dashboard');
+  };
+
+  const handleViewDemo = () => {
+    setShowDemoModal(true);
+  };
+
+  const handleViewSecurity = () => {
+    setShowSecurityModal(true);
+  };
+
+  const handleInsightClick = (insightTitle: string) => {
+    setShowInsightModal(insightTitle);
+  };
+
+  const handleFeatureClick = (featureTitle: string) => {
+    setShowFeatureModal(featureTitle);
+  };
+
+  const handleCreateAccount = () => {
+    navigate('/settings');
   };
 
   return (
@@ -214,11 +256,20 @@ export const Home: React.FC = () => {
                 transition={{ duration: 0.6, delay: 0.8 }}
                 className="flex flex-col sm:flex-row gap-4"
               >
-                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold">
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold"
+                  onClick={handleStartFree}
+                >
                   <span>Empezar Gratis</span>
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
-                <Button variant="outline" size="lg" className="border-slate-600 text-slate-300 hover:bg-slate-800 px-8 py-4 text-lg">
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="border-slate-600 text-slate-300 hover:bg-slate-800 px-8 py-4 text-lg"
+                  onClick={handleViewDemo}
+                >
                   <Play className="w-5 h-5 mr-2" />
                   <span>Ver Demo</span>
                 </Button>
@@ -381,7 +432,10 @@ export const Home: React.FC = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="h-full bg-slate-800/50 border-red-500/30 hover:border-red-500/50 transition-all duration-300 hover:shadow-xl relative">
+                <Card 
+                  className="h-full bg-slate-800/50 border-red-500/30 hover:border-red-500/50 transition-all duration-300 hover:shadow-xl relative cursor-pointer"
+                  onClick={() => handleFeatureClick(feature.title)}
+                >
                   <CardContent className="p-6">
                     {/* Priority Indicator */}
                     <div className="absolute top-3 right-3">
@@ -444,7 +498,10 @@ export const Home: React.FC = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="bg-slate-800/50 border-slate-700 p-6 relative">
+                <Card 
+                  className="bg-slate-800/50 border-slate-700 p-6 relative cursor-pointer hover:border-slate-600 transition-all duration-300"
+                  onClick={() => handleInsightClick(insight.title)}
+                >
                   <CardContent className="space-y-4">
                     {/* Priority Tag */}
                     <div className="absolute top-3 right-3">
@@ -592,12 +649,21 @@ export const Home: React.FC = () => {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold">
+                  <Button 
+                    size="lg" 
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold"
+                    onClick={handleCreateAccount}
+                  >
                     <Crown className="w-5 h-5 mr-2" />
                     <span>Crear Cuenta Gratis</span>
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
-                  <Button variant="outline" size="lg" className="border-slate-600 text-slate-300 hover:bg-slate-800 px-8 py-4 text-lg">
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="border-slate-600 text-slate-300 hover:bg-slate-800 px-8 py-4 text-lg"
+                    onClick={handleViewSecurity}
+                  >
                     <Lock className="w-5 h-5 mr-2" />
                     <span>Ver Seguridad</span>
                   </Button>
@@ -622,6 +688,266 @@ export const Home: React.FC = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Demo Modal */}
+      <AnimatePresence>
+        {showDemoModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowDemoModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-8 max-w-2xl w-full relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowDemoModal(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              
+              <div className="text-center space-y-6">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto">
+                  <Play className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-white">Demo Interactivo</h3>
+                <p className="text-slate-300">
+                  Explora todas las funcionalidades de Caocal en nuestro demo interactivo. 
+                  Descubre cómo nuestra plataforma puede transformar tu gestión financiera.
+                </p>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Button 
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    onClick={() => navigate('/dashboard')}
+                  >
+                    <Play className="w-4 h-4 mr-2" />
+                    Ir al Dashboard
+                  </Button>
+                  <Button variant="outline" className="border-slate-600 text-slate-300">
+                    <ExternalLink className="w-4 h-4 mr-2" />
+                    Ver Video
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Security Modal */}
+      <AnimatePresence>
+        {showSecurityModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowSecurityModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-8 max-w-2xl w-full relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowSecurityModal(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              
+              <div className="space-y-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Shield className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">Seguridad de Nivel Bancario</h3>
+                  <p className="text-slate-300">
+                    Tu seguridad es nuestra prioridad. Implementamos las mejores prácticas de la industria.
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="p-4 bg-slate-700/50 rounded-lg">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <Lock className="w-5 h-5 text-emerald-500" />
+                      <h4 className="font-semibold text-white">Encriptación AES-256</h4>
+                    </div>
+                    <p className="text-sm text-slate-300">
+                      Todos los datos están protegidos con encriptación de nivel militar.
+                    </p>
+                  </div>
+                  
+                  <div className="p-4 bg-slate-700/50 rounded-lg">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <Shield className="w-5 h-5 text-blue-500" />
+                      <h4 className="font-semibold text-white">Autenticación MFA</h4>
+                    </div>
+                    <p className="text-sm text-slate-300">
+                      Verificación en dos pasos para máxima seguridad.
+                    </p>
+                  </div>
+                  
+                  <div className="p-4 bg-slate-700/50 rounded-lg">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <Activity className="w-5 h-5 text-purple-500" />
+                      <h4 className="font-semibold text-white">Monitoreo 24/7</h4>
+                    </div>
+                    <p className="text-sm text-slate-300">
+                      Sistemas de detección de fraudes en tiempo real.
+                    </p>
+                  </div>
+                  
+                  <div className="p-4 bg-slate-700/50 rounded-lg">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <Award className="w-5 h-5 text-orange-500" />
+                      <h4 className="font-semibold text-white">Certificaciones</h4>
+                    </div>
+                    <p className="text-sm text-slate-300">
+                      Cumplimiento con estándares internacionales de seguridad.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex justify-center">
+                  <Button 
+                    className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
+                    onClick={() => setShowSecurityModal(false)}
+                  >
+                    Entendido
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Insight Modal */}
+      <AnimatePresence>
+        {showInsightModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowInsightModal(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-8 max-w-lg w-full relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowInsightModal(null)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              
+              <div className="space-y-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Lightbulb className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">{showInsightModal}</h3>
+                  <p className="text-slate-300">
+                    {insights.find(i => i.title === showInsightModal)?.description}
+                  </p>
+                </div>
+                
+                <div className="space-y-3">
+                  <Button 
+                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    onClick={() => navigate('/dashboard')}
+                  >
+                    <TrendingUp className="w-4 h-4 mr-2" />
+                    Aplicar Recomendación
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-slate-600 text-slate-300"
+                    onClick={() => navigate('/education')}
+                  >
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Aprender Más
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Feature Modal */}
+      <AnimatePresence>
+        {showFeatureModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowFeatureModal(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-8 max-w-lg w-full relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowFeatureModal(null)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              
+              <div className="space-y-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    {features.find(f => f.title === showFeatureModal)?.icon}
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">{showFeatureModal}</h3>
+                  <p className="text-slate-300">
+                    {features.find(f => f.title === showFeatureModal)?.description}
+                  </p>
+                </div>
+                
+                <div className="space-y-3">
+                  <Button 
+                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    onClick={() => navigate('/dashboard')}
+                  >
+                    <Settings className="w-4 h-4 mr-2" />
+                    Configurar Ahora
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-slate-600 text-slate-300"
+                    onClick={() => navigate('/education')}
+                  >
+                    <Info className="w-4 h-4 mr-2" />
+                    Saber Más
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }; 
