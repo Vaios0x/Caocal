@@ -620,7 +620,7 @@ export const Portfolio: React.FC = () => {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-slate-800 rounded-2xl p-8 max-w-lg w-full relative"
+              className="bg-slate-800 rounded-2xl p-6 max-w-md w-full relative max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <button
@@ -630,12 +630,12 @@ export const Portfolio: React.FC = () => {
                 <X className="w-6 h-6" />
               </button>
               
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Globe className="w-8 h-8 text-white" />
+                  <div className="w-12 h-12 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <Globe className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">Detalles del Activo</h3>
+                  <h3 className="text-lg font-bold text-white mb-2">Detalles del Activo</h3>
                 </div>
                 
                 <div className="space-y-4">
@@ -644,47 +644,49 @@ export const Portfolio: React.FC = () => {
                     .map((asset) => (
                       <div key={asset.symbol} className="space-y-4">
                         <div className="flex items-center space-x-3">
-                          <img src={asset.imageUrl} alt={asset.name} className="w-12 h-12 rounded-lg" />
+                          <img src={asset.imageUrl} alt={asset.name} className="w-10 h-10 rounded-lg" />
                           <div>
-                            <h4 className="font-semibold text-white">{asset.name}</h4>
-                            <p className="text-sm text-slate-400">{asset.symbol}</p>
+                            <h4 className="font-semibold text-white text-sm">{asset.name}</h4>
+                            <p className="text-xs text-slate-400">{asset.symbol}</p>
                           </div>
                         </div>
                         
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-3">
                           <div className="p-3 bg-slate-700/50 rounded-lg">
                             <p className="text-xs text-slate-400">Valor</p>
-                            <p className="font-semibold text-white">${asset.value.toFixed(2)}</p>
+                            <p className="font-semibold text-white text-sm">${asset.value.toFixed(2)}</p>
                           </div>
                           <div className="p-3 bg-slate-700/50 rounded-lg">
                             <p className="text-xs text-slate-400">Cantidad</p>
-                            <p className="font-semibold text-white">{asset.amount.toFixed(4)}</p>
+                            <p className="font-semibold text-white text-sm">{asset.amount.toFixed(4)}</p>
                           </div>
                           <div className="p-3 bg-slate-700/50 rounded-lg">
                             <p className="text-xs text-slate-400">Cambio 24h</p>
-                            <p className={`font-semibold ${asset.change24h >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            <p className={`font-semibold text-sm ${asset.change24h >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                               {asset.change24h >= 0 ? '+' : ''}{asset.change24h.toFixed(2)}%
                             </p>
                           </div>
                           <div className="p-3 bg-slate-700/50 rounded-lg">
                             <p className="text-xs text-slate-400">% del Portafolio</p>
-                            <p className="font-semibold text-white">{((asset.value / totalValue) * 100).toFixed(1)}%</p>
+                            <p className="font-semibold text-white text-sm">{((asset.value / totalValue) * 100).toFixed(1)}%</p>
                           </div>
                         </div>
                         
-                        <div className="flex space-x-3">
+                        <div className="flex space-x-3 pt-2">
                           <Button 
                             variant="outline" 
+                            size="sm"
                             className="flex-1 border-slate-600 text-slate-300"
                             onClick={() => setShowAssetModal(null)}
                           >
                             Cerrar
                           </Button>
                           <Button 
+                            size="sm"
                             className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
                             onClick={() => navigate('/rwa')}
                           >
-                            Ver Más Activos
+                            Ver Más
                           </Button>
                         </div>
                       </div>
@@ -710,7 +712,7 @@ export const Portfolio: React.FC = () => {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-slate-800 rounded-2xl p-8 max-w-2xl w-full relative"
+              className="bg-slate-800 rounded-2xl p-6 max-w-lg w-full relative max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <button
@@ -720,33 +722,33 @@ export const Portfolio: React.FC = () => {
                 <X className="w-6 h-6" />
               </button>
               
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <PieChart className="w-8 h-8 text-white" />
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <PieChart className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">Distribución del Portafolio</h3>
-                  <p className="text-slate-300">
+                  <h3 className="text-lg font-bold text-white mb-2">Distribución del Portafolio</h3>
+                  <p className="text-sm text-slate-300">
                     Análisis detallado de la distribución de tus activos por categoría.
                   </p>
                 </div>
                 
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {distributionData.map((item, index) => (
-                    <div key={item.type} className="p-4 bg-slate-700/50 rounded-lg border border-slate-600">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center space-x-3">
-                          <div className={`w-4 h-4 rounded-full ${
+                    <div key={item.type} className="p-3 bg-slate-700/50 rounded-lg border border-slate-600">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center space-x-2">
+                          <div className={`w-3 h-3 rounded-full ${
                             item.color === 'blue' ? 'bg-blue-500' :
                             item.color === 'emerald' ? 'bg-emerald-500' :
                             'bg-orange-500'
                           }`}></div>
-                          <h4 className="font-semibold text-white">{item.type}</h4>
+                          <h4 className="font-semibold text-white text-sm">{item.type}</h4>
                         </div>
-                        <span className="text-lg font-bold text-white">{item.percentage}%</span>
+                        <span className="text-sm font-bold text-white">{item.percentage}%</span>
                       </div>
                       
-                      <div className="w-full h-3 bg-slate-600 rounded-full overflow-hidden">
+                      <div className="w-full h-2 bg-slate-600 rounded-full overflow-hidden mb-2">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${item.percentage}%` }}
@@ -759,7 +761,7 @@ export const Portfolio: React.FC = () => {
                         />
                       </div>
                       
-                      <div className="mt-3 text-sm text-slate-400">
+                      <div className="text-xs text-slate-400 space-y-1">
                         <p>Valor estimado: ${((totalValue * item.percentage) / 100).toFixed(2)}</p>
                         <p>Activos en esta categoría: {Math.floor(assets.length * (item.percentage / 100))}</p>
                       </div>
@@ -767,8 +769,9 @@ export const Portfolio: React.FC = () => {
                   ))}
                 </div>
                 
-                <div className="flex justify-center">
+                <div className="flex justify-center pt-2">
                   <Button 
+                    size="sm"
                     className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                     onClick={() => setShowDistributionModal(false)}
                   >
@@ -795,7 +798,7 @@ export const Portfolio: React.FC = () => {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-slate-800 rounded-2xl p-8 max-w-lg w-full relative"
+              className="bg-slate-800 rounded-2xl p-6 max-w-md w-full relative max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <button
@@ -805,36 +808,36 @@ export const Portfolio: React.FC = () => {
                 <X className="w-6 h-6" />
               </button>
               
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Download className="w-8 h-8 text-white" />
+                  <div className="w-12 h-12 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <Download className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">Reporte de Portafolio</h3>
-                  <p className="text-slate-300">
+                  <h3 className="text-lg font-bold text-white mb-2">Reporte de Portafolio</h3>
+                  <p className="text-sm text-slate-300">
                     Descarga un reporte completo de tu portafolio en formato PDF.
                   </p>
                 </div>
                 
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
                     <div className="p-3 bg-slate-700/50 rounded-lg text-center">
                       <p className="text-xs text-slate-400">Valor Total</p>
-                      <p className="font-semibold text-white">${reportData.totalValue.toFixed(2)}</p>
+                      <p className="font-semibold text-white text-sm">${reportData.totalValue.toFixed(2)}</p>
                     </div>
                     <div className="p-3 bg-slate-700/50 rounded-lg text-center">
                       <p className="text-xs text-slate-400">Cambio 24h</p>
-                      <p className={`font-semibold ${reportData.totalChange >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      <p className={`font-semibold text-sm ${reportData.totalChange >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                         {reportData.totalChange >= 0 ? '+' : ''}{reportData.totalChange.toFixed(2)}%
                       </p>
                     </div>
                     <div className="p-3 bg-slate-700/50 rounded-lg text-center">
                       <p className="text-xs text-slate-400">Activos</p>
-                      <p className="font-semibold text-white">{reportData.totalAssets}</p>
+                      <p className="font-semibold text-white text-sm">{reportData.totalAssets}</p>
                     </div>
                     <div className="p-3 bg-slate-700/50 rounded-lg text-center">
                       <p className="text-xs text-slate-400">Tokens</p>
-                      <p className="font-semibold text-white">{reportData.totalTokens.toFixed(4)}</p>
+                      <p className="font-semibold text-white text-sm">{reportData.totalTokens.toFixed(4)}</p>
                     </div>
                   </div>
                   
@@ -843,15 +846,17 @@ export const Portfolio: React.FC = () => {
                   </div>
                 </div>
                 
-                <div className="flex space-x-3">
+                <div className="flex space-x-3 pt-2">
                   <Button 
                     variant="outline" 
+                    size="sm"
                     className="flex-1 border-slate-600 text-slate-300"
                     onClick={() => setShowReportModal(false)}
                   >
                     Cancelar
                   </Button>
                   <Button 
+                    size="sm"
                     className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
                     onClick={() => {
                       // Aquí se implementaría la descarga real
@@ -883,7 +888,7 @@ export const Portfolio: React.FC = () => {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-slate-800 rounded-2xl p-8 max-w-2xl w-full relative"
+              className="bg-slate-800 rounded-2xl p-6 max-w-lg w-full relative max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <button
@@ -893,30 +898,30 @@ export const Portfolio: React.FC = () => {
                 <X className="w-6 h-6" />
               </button>
               
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Globe className="w-8 h-8 text-white" />
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <Globe className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">¿Qué son los RWA?</h3>
-                  <p className="text-slate-300">
+                  <h3 className="text-lg font-bold text-white mb-2">¿Qué son los RWA?</h3>
+                  <p className="text-sm text-slate-300">
                     Los Real World Assets (RWA) son activos del mundo real tokenizados en blockchain.
                   </p>
                 </div>
                 
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {rwaInfo.map((info) => (
-                    <div key={info.id} className={`p-4 rounded-lg border ${getBgColorClass(info.color)}`}>
+                    <div key={info.id} className={`p-3 rounded-lg border ${getBgColorClass(info.color)}`}>
                       <div className="flex items-start space-x-3">
-                        <div className={`${getColorClass(info.color)}`}>
+                        <div className={`${getColorClass(info.color)} flex-shrink-0`}>
                           {info.icon}
                         </div>
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-slate-900 dark:text-white mb-2">{info.title}</h4>
-                          <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-slate-900 dark:text-white text-sm mb-1">{info.title}</h4>
+                          <p className="text-xs text-slate-600 dark:text-slate-400 mb-2 leading-relaxed">
                             {info.description}
                           </p>
-                          <div className="text-xs text-slate-500 dark:text-slate-500">
+                          <div className="text-xs text-slate-500 dark:text-slate-500 leading-relaxed">
                             Beneficios adicionales incluyen liquidez 24/7, transparencia total y acceso global.
                           </div>
                         </div>
@@ -925,15 +930,17 @@ export const Portfolio: React.FC = () => {
                   ))}
                 </div>
                 
-                <div className="flex space-x-3">
+                <div className="flex space-x-3 pt-2">
                   <Button 
                     variant="outline" 
+                    size="sm"
                     className="flex-1 border-slate-600 text-slate-300"
                     onClick={() => setShowRwaInfoModal(false)}
                   >
                     Cerrar
                   </Button>
                   <Button 
+                    size="sm"
                     className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                     onClick={() => navigate('/education')}
                   >
