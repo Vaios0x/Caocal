@@ -11,13 +11,7 @@ import { AiInsights } from '@/pages/AiInsights';
 import { Education } from '@/pages/Education';
 import { Calculators } from '@/pages/Calculators';
 import { Help } from '@/pages/Help';
-
-const Settings = () => (
-  <div className="text-center space-y-4 py-20">
-    <h1 className="text-4xl font-bold gradient-text">Configuración</h1>
-    <p className="text-muted-foreground">Próximamente: Preferencias y configuración de cuenta</p>
-  </div>
-);
+import { Settings } from '@/pages/Settings';
 
 export const AppRouter = createBrowserRouter([
   {
