@@ -31,9 +31,12 @@
 - [🚀 Instalación y Configuración](#-instalación-y-configuración)
 - [🎨 Componentes y Funcionalidades](#-componentes-y-funcionalidades)
 - [📊 Estado de la Aplicación](#-estado-de-la-aplicación)
+- [🗄️ Base de Datos y Modelos](#️-base-de-datos-y-modelos)
 - [🎭 Animaciones y UX](#-animaciones-y-ux)
+- [🤖 Servicios de IA y Lógica de Negocio](#-servicios-de-ia-y-lógica-de-negocio)
 - [🔧 Scripts Disponibles](#-scripts-disponibles)
 - [📱 Páginas y Rutas](#-páginas-y-rutas)
+- [🔌 API Endpoints](#-api-endpoints)
 - [🎯 Roadmap](#-roadmap)
 - [🤝 Contribución](#-contribución)
 - [📄 Licencia](#-licencia)
@@ -81,11 +84,35 @@
 - **Planeación financiera** a largo plazo
 - **Reportes personalizados** y exportables
 
+### 🔐 Backend Seguro y Escalable
+- **API RESTful** con FastAPI y documentación automática
+- **Autenticación JWT** con tokens seguros y refresh
+- **Base de datos PostgreSQL** con integridad transaccional
+- **ORM SQLModel** combinando Pydantic y SQLAlchemy
+- **Webhooks seguros** para integración con partners
+- **Micro-ahorro automático** con IA integrada
+- **Validación de datos** robusta con Pydantic
+- **Migraciones automáticas** con Alembic
+
+### 🤖 Inteligencia Artificial
+- **AI-Oracle** para determinar tasas de ahorro óptimas
+- **Análisis predictivo** de patrones de gasto
+- **Recomendaciones personalizadas** basadas en comportamiento
+- **Optimización automática** de portafolios
+- **Detección de anomalías** en transacciones
+
+### 🔗 Integración con Partners
+- **Webhooks seguros** para Uber, Rappi, DiDi
+- **API keys** para autenticación de partners
+- **Procesamiento automático** de ganancias
+- **Sincronización en tiempo real** de datos
+- **Validación de integridad** de transacciones
+
 ---
 
 ## 🛠️ Tecnologías Utilizadas
 
-### Frontend Core
+### 🎨 Frontend Core
 <div align="center">
 
 | Tecnología | Versión | Propósito |
@@ -93,6 +120,40 @@
 | ![React](https://img.shields.io/badge/React-19.1.0-61DAFB?style=flat-square&logo=react) | 19.1.0 | Framework principal |
 | ![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-3178C6?style=flat-square&logo=typescript) | 5.8.3 | Tipado estático |
 | ![Vite](https://img.shields.io/badge/Vite-7.0.4-646CFF?style=flat-square&logo=vite) | 7.0.4 | Build tool y dev server |
+
+</div>
+
+### 🔧 Backend Core
+<div align="center">
+
+| Tecnología | Versión | Propósito |
+|------------|---------|-----------|
+| ![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-009688?style=flat-square&logo=fastapi) | 0.104.1 | Framework API moderno |
+| ![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python) | 3.12 | Lenguaje de programación |
+| ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?style=flat-square&logo=postgresql) | 15 | Base de datos principal |
+| ![SQLModel](https://img.shields.io/badge/SQLModel-0.0.14-000000?style=flat-square) | 0.0.14 | ORM y validación de datos |
+
+</div>
+
+### 🔐 Seguridad y Autenticación
+<div align="center">
+
+| Tecnología | Versión | Propósito |
+|------------|---------|-----------|
+| ![JWT](https://img.shields.io/badge/JWT-1.3.1-000000?style=flat-square&logo=json-web-tokens) | 1.3.1 | Autenticación por tokens |
+| ![Passlib](https://img.shields.io/badge/Passlib-1.7.4-000000?style=flat-square) | 1.7.4 | Hashing de contraseñas |
+| ![bcrypt](https://img.shields.io/badge/bcrypt-4.1.2-000000?style=flat-square) | 4.1.2 | Algoritmo de hashing seguro |
+
+</div>
+
+### 🗄️ Base de Datos y Migraciones
+<div align="center">
+
+| Tecnología | Versión | Propósito |
+|------------|---------|-----------|
+| ![Alembic](https://img.shields.io/badge/Alembic-1.13.1-000000?style=flat-square) | 1.13.1 | Migraciones de base de datos |
+| ![psycopg2](https://img.shields.io/badge/psycopg2-2.9.9-336791?style=flat-square) | 2.9.9 | Driver PostgreSQL |
+| ![Pydantic](https://img.shields.io/badge/Pydantic-2.5.0-E92063?style=flat-square) | 2.5.0 | Validación de datos |
 
 </div>
 
@@ -134,6 +195,7 @@
 
 ## 📁 Estructura del Proyecto
 
+### 🎨 Frontend (caocal-mx/)
 ```
 caocal-mx/
 ├── 📁 src/
@@ -186,6 +248,38 @@ caocal-mx/
 └── 📄 README.md                   # Este archivo
 ```
 
+### 🔧 Backend (caocal-backend/)
+```
+caocal-backend/
+├── 📁 app/
+│   ├── 📁 api/
+│   │   └── 📁 v1/
+│   │       ├── 📁 endpoints/      # Endpoints de la API
+│   │       │   ├── auth.py        # Autenticación y registro
+│   │       │   ├── users.py       # Gestión de usuarios
+│   │       │   ├── transactions.py # Transacciones financieras
+│   │       │   └── partner_webhooks.py # Webhooks de partners
+│   │       └── api.py             # Router principal de la API
+│   ├── 📁 core/                   # Configuración central
+│   │   ├── config.py              # Configuración de la aplicación
+│   │   ├── security.py            # Funciones de seguridad
+│   │   └── dependencies.py        # Dependencias de FastAPI
+│   ├── 📁 db/                     # Base de datos
+│   │   ├── session.py             # Configuración de sesiones DB
+│   │   └── models.py              # Modelos SQLModel
+│   ├── 📁 schemas/                # Esquemas Pydantic
+│   │   ├── user_schemas.py        # Esquemas de usuario
+│   │   ├── token_schemas.py       # Esquemas de tokens
+│   │   └── transaction_schemas.py # Esquemas de transacciones
+│   └── 📁 services/               # Lógica de negocio
+│       ├── user_service.py        # Servicios de usuario
+│       └── transaction_service.py # Servicios de transacciones
+├── 📄 main.py                     # Punto de entrada de la aplicación
+├── 📄 pyproject.toml              # Dependencias y configuración
+├── 📄 .env.example                # Variables de entorno
+└── 📄 alembic.ini                 # Configuración de migraciones
+```
+
 ---
 
 ## 🚀 Instalación y Configuración
@@ -220,8 +314,59 @@ npm run dev
 
 La aplicación estará disponible en `http://localhost:5173`
 
+### 🔧 Backend - Instalación y Configuración
+
+#### Prerrequisitos Backend
+- **Python** >= 3.12
+- **PostgreSQL** >= 15.0
+- **Poetry** (recomendado) o pip
+
+#### Instalación Backend
+
+1. **Clonar y navegar al backend**
+```bash
+cd caocal-backend
+```
+
+2. **Instalar dependencias**
+```bash
+# Con Poetry (recomendado)
+poetry install
+
+# O con pip
+pip install -r requirements.txt
+```
+
+3. **Configurar base de datos PostgreSQL**
+```bash
+# Crear base de datos
+createdb caocal_db
+
+# Configurar variables de entorno
+cp .env.example .env
+# Editar .env con tus credenciales de DB
+```
+
+4. **Ejecutar migraciones**
+```bash
+alembic upgrade head
+```
+
+5. **Ejecutar servidor de desarrollo**
+```bash
+# Con Poetry
+poetry run uvicorn main:app --reload --port 8000
+
+# O directamente
+uvicorn main:app --reload --port 8000
+```
+
+La API estará disponible en `http://localhost:8000`
+Documentación automática en `http://localhost:8000/docs`
+
 ### Scripts Disponibles
 
+#### Frontend Scripts
 | Comando | Descripción |
 |---------|-------------|
 | `npm run dev` | Servidor de desarrollo con HMR |
@@ -230,6 +375,16 @@ La aplicación estará disponible en `http://localhost:5173`
 | `npm run lint` | Linting del código |
 | `npm run type-check` | Verificación de tipos TypeScript |
 | `npm run format` | Formateo automático del código |
+
+#### Backend Scripts
+| Comando | Descripción |
+|---------|-------------|
+| `uvicorn main:app --reload` | Servidor de desarrollo |
+| `alembic upgrade head` | Aplicar migraciones |
+| `alembic revision --autogenerate` | Generar nueva migración |
+| `pytest` | Ejecutar tests |
+| `black .` | Formatear código Python |
+| `isort .` | Ordenar imports |
 
 ---
 
@@ -286,13 +441,90 @@ interface UserState {
 ```typescript
 <SWRConfig
   value={{
-    fetcher: (url: string) => fetch(url).then(res => res.json()),
+    fetcher: (url: string) => fetch(url) => res.json()),
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
   }}
 >
   <RouterProvider router={AppRouter} />
 </SWRConfig>
+```
+
+---
+
+## 🗄️ Base de Datos y Modelos
+
+### 📊 Modelos SQLModel
+
+#### Usuario
+```python
+class User(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    email: str = Field(unique=True, index=True)
+    hashed_password: str
+    name: Optional[str] = None
+    is_active: bool = Field(default=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+```
+
+#### Transacción
+```python
+class Transaction(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id")
+    amount: Decimal = Field(max_digits=10, decimal_places=2)
+    type: str = Field(description="EARNING, SAVING, INVESTMENT")
+    description: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    
+    user: Optional["User"] = Relationship(back_populates="transactions")
+```
+
+#### Activos RWA
+```python
+class RwaAsset(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str
+    token_symbol: str = Field(unique=True)
+    description: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+```
+
+#### Portafolio
+```python
+class PortfolioHolding(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id")
+    asset_id: int = Field(foreign_key="rwasset.id")
+    quantity: Decimal = Field(max_digits=18, decimal_places=8)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    
+    user: Optional["User"] = Relationship(back_populates="holdings")
+    asset: Optional["RwaAsset"] = Relationship(back_populates="holdings")
+```
+
+### 🔐 Seguridad y Autenticación
+
+#### Hashing de Contraseñas
+```python
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
+
+def get_password_hash(password: str) -> str:
+    return pwd_context.hash(password)
+```
+
+#### JWT Tokens
+```python
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
 ```
 
 ---
@@ -320,6 +552,113 @@ interface UserState {
 
 ---
 
+## 🤖 Servicios de IA y Lógica de Negocio
+
+### 🧠 AI-Oracle para Micro-Ahorro
+
+#### Determinación de Tasa de Ahorro
+```python
+async def determine_savings_rate(user_id: int, earning_amount: Decimal) -> float:
+    """
+    AI-Oracle que determina la tasa de ahorro óptima basada en:
+    - Historial de transacciones del usuario
+    - Patrones de gasto
+    - Metas financieras
+    - Comportamiento de mercado
+    """
+    # Análisis de patrones históricos
+    user_patterns = await analyze_user_patterns(user_id)
+    
+    # Factores de decisión
+    market_conditions = await get_market_conditions()
+    user_goals = await get_user_financial_goals(user_id)
+    
+    # Algoritmo de IA para determinar tasa óptima
+    optimal_rate = calculate_optimal_savings_rate(
+        user_patterns, market_conditions, user_goals, earning_amount
+    )
+    
+    return min(max(optimal_rate, 0.05), 0.30)  # Entre 5% y 30%
+```
+
+#### Procesamiento Automático de Ganancias
+```python
+async def process_partner_earning(
+    partner_user_id: str, 
+    earning_amount: Decimal, 
+    platform: str
+) -> dict:
+    """
+    Procesa automáticamente las ganancias de partners:
+    1. Identifica usuario de Caocal
+    2. Determina tasa de ahorro con IA
+    3. Crea transacciones automáticas
+    4. Actualiza métricas en tiempo real
+    """
+    # Buscar usuario correspondiente
+    user = await find_user_by_partner_id(partner_user_id)
+    
+    # AI-Oracle determina tasa de ahorro
+    savings_rate = await determine_savings_rate(user.id, earning_amount)
+    
+    # Calcular micro-ahorro
+    savings_amount = earning_amount * Decimal(str(savings_rate))
+    
+    # Crear transacciones automáticas
+    await create_user_transaction(
+        user_id=user.id,
+        amount=earning_amount,
+        type="EARNING",
+        description=f"Ganancia de {platform}"
+    )
+    
+    await create_user_transaction(
+        user_id=user.id,
+        amount=savings_amount,
+        type="SAVING",
+        description=f"Micro-ahorro automático ({savings_rate*100:.1f}%)"
+    )
+    
+    return {
+        "user_id": user.id,
+        "earning_amount": earning_amount,
+        "savings_rate": savings_rate,
+        "savings_amount": savings_amount,
+        "platform": platform
+    }
+```
+
+### 📊 Análisis Predictivo
+
+#### Predicción de Ingresos
+```python
+async def predict_earnings(user_id: int, days_ahead: int = 30) -> dict:
+    """
+    Predice ingresos futuros basado en:
+    - Patrones históricos
+    - Estacionalidad
+    - Factores externos (eventos, clima, etc.)
+    """
+    historical_data = await get_user_earnings_history(user_id)
+    
+    # Análisis de series temporales
+    seasonal_patterns = analyze_seasonality(historical_data)
+    trend_analysis = analyze_trends(historical_data)
+    
+    # Predicción con modelos de ML
+    predictions = ml_model.predict(
+        historical_data, seasonal_patterns, trend_analysis
+    )
+    
+    return {
+        "predictions": predictions,
+        "confidence_interval": calculate_confidence_interval(predictions),
+        "factors": identify_key_factors(historical_data)
+    }
+```
+
+---
+
 ## 📱 Páginas y Rutas
 
 | Ruta | Página | Descripción |
@@ -333,6 +672,70 @@ interface UserState {
 | `/ai-insights` | IA Insights | Análisis inteligente |
 | `/education` | Educación | Contenido educativo |
 | `/calculators` | Calculadoras | Herramientas financieras |
+
+---
+
+## 🔌 API Endpoints
+
+### 🔐 Autenticación (`/api/v1/auth`)
+| Método | Endpoint | Descripción | Autenticación |
+|--------|----------|-------------|---------------|
+| `POST` | `/register` | Registro de nuevo usuario | ❌ |
+| `POST` | `/login` | Inicio de sesión | ❌ |
+
+### 👤 Usuarios (`/api/v1/users`)
+| Método | Endpoint | Descripción | Autenticación |
+|--------|----------|-------------|---------------|
+| `GET` | `/me` | Obtener perfil del usuario actual | ✅ JWT |
+
+### 💰 Transacciones (`/api/v1/transactions`)
+| Método | Endpoint | Descripción | Autenticación |
+|--------|----------|-------------|---------------|
+| `GET` | `/` | Obtener transacciones del usuario | ✅ JWT |
+| `POST` | `/` | Crear nueva transacción | ✅ JWT |
+
+### 🔗 Webhooks de Partners (`/api/v1/webhooks`)
+| Método | Endpoint | Descripción | Autenticación |
+|--------|----------|-------------|---------------|
+| `POST` | `/earnings` | Webhook para ganancias de partners | ✅ API Key |
+
+### 📊 Ejemplos de Uso
+
+#### Registro de Usuario
+```bash
+curl -X POST "http://localhost:8000/api/v1/auth/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "usuario@caocal.mx",
+    "password": "password123",
+    "name": "Usuario Ejemplo"
+  }'
+```
+
+#### Login
+```bash
+curl -X POST "http://localhost:8000/api/v1/auth/login" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "username=usuario@caocal.mx&password=password123"
+```
+
+#### Obtener Transacciones
+```bash
+curl -X GET "http://localhost:8000/api/v1/transactions" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+#### Webhook de Partner
+```bash
+curl -X POST "http://localhost:8000/api/v1/webhooks/earnings" \
+  -H "X-API-Key: YOUR_PARTNER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "partner_user_id": "uber_12345",
+    "earning_amount": 45.50,
+    "platform": "Uber"
+  }'
+```
 
 ---
 
