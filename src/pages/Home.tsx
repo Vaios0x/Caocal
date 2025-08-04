@@ -11,8 +11,6 @@ import {
   DollarSign,
   BarChart3,
   Target,
-  Globe,
-  Award,
   Play,
   ChevronRight,
   ChevronLeft,
@@ -20,11 +18,9 @@ import {
   Sparkles,
   Crown,
   Lock,
-  Clock,
-  Eye,
-  EyeOff
+  Eye
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
+import { Card, CardContent } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
 
 // Datos de testimonios
@@ -93,7 +89,6 @@ const stats = [
 
 export const Home: React.FC = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  const [showSensitiveData, setShowSensitiveData] = useState(false);
 
   const nextTestimonial = () => {
     setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
