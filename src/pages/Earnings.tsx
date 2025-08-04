@@ -872,7 +872,11 @@ export const EarningsPage: React.FC = () => {
           riqueza de manera inteligente y sostenible.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" className="bg-gradient-to-r from-emerald-600 via-teal-600 to-blue-600 hover:from-emerald-700 hover:via-teal-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 text-lg px-8 py-4 rounded-xl">
+          <Button 
+            size="lg" 
+            className="bg-gradient-to-r from-emerald-600 via-teal-600 to-blue-600 hover:from-emerald-700 hover:via-teal-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 text-lg px-8 py-4 rounded-xl"
+            onClick={handleStrategyClick}
+          >
             <span>Ver Estrategias</span>
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
