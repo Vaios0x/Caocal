@@ -499,7 +499,7 @@ export const Help: React.FC = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <Headphones className="w-4 h-4 text-emerald-500" />
-                    <span>Respuesta < 2 min</span>
+                    <span>Respuesta &lt; 2 min</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Award className="w-4 h-4 text-emerald-500" />
