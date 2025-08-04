@@ -112,49 +112,35 @@
 
 ## 🛠️ Tecnologías Utilizadas
 
-### 🎨 Frontend Core
+### 🎨 Frontend
 <div align="center">
-
-| Tecnología | Versión | Propósito |
-|------------|---------|-----------|
-| ![React](https://img.shields.io/badge/React-19.1.0-61DAFB?style=flat-square&logo=react) | 19.1.0 | Framework principal |
-| ![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-3178C6?style=flat-square&logo=typescript) | 5.8.3 | Tipado estático |
-| ![Vite](https://img.shields.io/badge/Vite-7.0.4-646CFF?style=flat-square&logo=vite) | 7.0.4 | Build tool y dev server |
-
+  <img src="https://img.shields.io/badge/React-19.1.0-61DAFB?style=for-the-badge&logo=react" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-5.8.3-3178C6?style=for-the-badge&logo=typescript" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Vite-7.0.4-646CFF?style=for-the-badge&logo=vite" alt="Vite" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-4.1.11-38B2AC?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Zustand-5.0.7-764ABC?style=for-the-badge&logo=redux" alt="Zustand" />
+  <img src="https://img.shields.io/badge/Framer_Motion-12.23.12-0055FF?style=for-the-badge&logo=framer" alt="Framer Motion" />
 </div>
 
-### 🔧 Backend Core
+### ⚙️ Backend
 <div align="center">
-
-| Tecnología | Versión | Propósito |
-|------------|---------|-----------|
-| ![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-009688?style=flat-square&logo=fastapi) | 0.104.1 | Framework API moderno |
-| ![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python) | 3.12 | Lenguaje de programación |
-| ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?style=flat-square&logo=postgresql) | 15 | Base de datos principal |
-| ![SQLModel](https://img.shields.io/badge/SQLModel-0.0.14-000000?style=flat-square) | 0.0.14 | ORM y validación de datos |
-
+  <img src="https://img.shields.io/badge/FastAPI-0.104.1-009688?style=for-the-badge&logo=fastapi" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python" alt="Python" />
+  <img src="https://img.shields.io/badge/PostgreSQL-15-336791?style=for-the-badge&logo=postgresql" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/SQLModel-0.0.14-4CAF50?style=for-the-badge" alt="SQLModel" />
+  <img src="https://img.shields.io/badge/JWT-1.3.1-000000?style=for-the-badge&logo=jsonwebtokens" alt="JWT" />
+  <img src="https://img.shields.io/badge/Passlib-1.7.4-8B4513?style=for-the-badge" alt="Passlib" />
+  <img src="https://img.shields.io/badge/Alembic-1.13.1-FF5722?style=for-the-badge" alt="Alembic" />
 </div>
 
-### 🔐 Seguridad y Autenticación
+### 🔐 Seguridad y Herramientas
 <div align="center">
-
-| Tecnología | Versión | Propósito |
-|------------|---------|-----------|
-| ![JWT](https://img.shields.io/badge/JWT-1.3.1-000000?style=flat-square&logo=json-web-tokens) | 1.3.1 | Autenticación por tokens |
-| ![Passlib](https://img.shields.io/badge/Passlib-1.7.4-000000?style=flat-square) | 1.7.4 | Hashing de contraseñas |
-| ![bcrypt](https://img.shields.io/badge/bcrypt-4.1.2-000000?style=flat-square) | 4.1.2 | Algoritmo de hashing seguro |
-
-</div>
-
-### 🗄️ Base de Datos y Migraciones
-<div align="center">
-
-| Tecnología | Versión | Propósito |
-|------------|---------|-----------|
-| ![Alembic](https://img.shields.io/badge/Alembic-1.13.1-000000?style=flat-square) | 1.13.1 | Migraciones de base de datos |
-| ![psycopg2](https://img.shields.io/badge/psycopg2-2.9.9-336791?style=flat-square) | 2.9.9 | Driver PostgreSQL |
-| ![Pydantic](https://img.shields.io/badge/Pydantic-2.5.0-E92063?style=flat-square) | 2.5.0 | Validación de datos |
-
+  <img src="https://img.shields.io/badge/bcrypt-4.1.2-000000?style=for-the-badge" alt="bcrypt" />
+  <img src="https://img.shields.io/badge/Pydantic-2.5.0-E92063?style=for-the-badge" alt="Pydantic" />
+  <img src="https://img.shields.io/badge/psycopg2-2.9.9-336791?style=for-the-badge" alt="psycopg2" />
+  <img src="https://img.shields.io/badge/SWR-2.3.4-000000?style=for-the-badge" alt="SWR" />
+  <img src="https://img.shields.io/badge/React_Router-7.7.1-CA4245?style=for-the-badge&logo=react-router" alt="React Router" />
+  <img src="https://img.shields.io/badge/Lucide_React-0.536.0-000000?style=for-the-badge" alt="Lucide React" />
 </div>
 
 ### UI/UX y Styling
