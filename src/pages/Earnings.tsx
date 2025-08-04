@@ -15,20 +15,52 @@ import {
   Download, 
   Eye, 
   EyeOff,
-  Filter
+  Filter,
+  X,
+  ExternalLink,
+  Share2,
+  Info,
+  AlertCircle,
+  CheckCircle,
+  Plus,
+  Minus,
+  Edit,
+  Trash2,
+  Star,
+  BookOpen,
+  Calculator,
+  ChevronRight,
+  ChevronDown,
+  ChevronUp,
+  Lock,
+  Zap,
+  Users,
+  Award,
+  Bell,
+  MessageCircle,
+  Settings,
+  PieChart
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
 import { useUserData } from '@/hooks/useUserData.js';
+import { Link, useNavigate } from 'react-router-dom';
 import type { Earnings } from '@/data/mockData.js';
 
 export const EarningsPage: React.FC = () => {
+  const navigate = useNavigate();
   const { earnings, isLoading, error } = useUserData();
   const [showSensitiveData, setShowSensitiveData] = useState(false);
   const [selectedTimeframe, setSelectedTimeframe] = useState<'7d' | '14d' | '30d' | '90d'>('30d');
   const [selectedPlatform, setSelectedPlatform] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'chart' | 'list' | 'calendar'>('chart');
   const [selectedEarning, setSelectedEarning] = useState<string | null>(null);
+  const [showEarningModal, setShowEarningModal] = useState<string | null>(null);
+  const [showPlatformModal, setShowPlatformModal] = useState(false);
+  const [showHourlyModal, setShowHourlyModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [showStrategyModal, setShowStrategyModal] = useState(false);
+  const [expandedInsights, setExpandedInsights] = useState<string[]>([]);
 
   // Filtrar solo los datos de Earnings (excluir Notifications)
   const earningsData = Array.isArray(earnings) 
@@ -66,6 +98,113 @@ export const EarningsPage: React.FC = () => {
     { hour: '18-21', earnings: 600, percentage: 20 },
     { hour: '21-24', earnings: 300, percentage: 10 }
   ];
+
+  // Datos de estrategias de optimización
+  const optimizationStrategies = [
+    {
+      id: 'peak-hours',
+      title: 'Horas Pico',
+      description: 'Enfócate en las horas de mayor demanda para maximizar ganancias',
+      icon: <Clock className="w-5 h-5" />,
+      color: 'blue',
+      impact: 'Alto',
+      implementation: 'Fácil',
+      estimatedIncrease: '+25%'
+    },
+    {
+      id: 'platform-diversification',
+      title: 'Diversificación de Plataformas',
+      description: 'Usa múltiples plataformas para reducir dependencia y aumentar ingresos',
+      icon: <Globe className="w-5 h-5" />,
+      color: 'emerald',
+      impact: 'Medio',
+      implementation: 'Moderada',
+      estimatedIncrease: '+15%'
+    },
+    {
+      id: 'route-optimization',
+      title: 'Optimización de Rutas',
+      description: 'Planifica rutas eficientes para reducir tiempo y aumentar viajes',
+      icon: <Target className="w-5 h-5" />,
+      color: 'purple',
+      impact: 'Alto',
+      implementation: 'Difícil',
+      estimatedIncrease: '+30%'
+    }
+  ];
+
+  // Datos de reporte
+  const reportData = {
+    totalEarnings,
+    averageEarnings,
+    maxEarnings,
+    volatility,
+    performanceByPeriod,
+    platformData,
+    hourlyData,
+    generatedAt: new Date().toLocaleString('es-MX')
+  };
+
+  const handleEarningClick = (earningId: string) => {
+    setShowEarningModal(earningId);
+  };
+
+  const handlePlatformClick = () => {
+    setShowPlatformModal(true);
+  };
+
+  const handleHourlyClick = () => {
+    setShowHourlyModal(true);
+  };
+
+  const handleDownloadReport = () => {
+    setShowReportModal(true);
+  };
+
+  const handleStrategyClick = () => {
+    setShowStrategyModal(true);
+  };
+
+  const handleInsightExpand = (insightId: string) => {
+    if (expandedInsights.includes(insightId)) {
+      setExpandedInsights(expandedInsights.filter(id => id !== insightId));
+    } else {
+      setExpandedInsights([...expandedInsights, insightId]);
+    }
+  };
+
+  const handleViewStrategies = () => {
+    navigate('/education');
+  };
+
+  const getColorClass = (color: string) => {
+    switch (color) {
+      case 'emerald': return 'text-emerald-600 dark:text-emerald-400';
+      case 'blue': return 'text-blue-600 dark:text-blue-400';
+      case 'purple': return 'text-purple-600 dark:text-purple-400';
+      case 'orange': return 'text-orange-600 dark:text-orange-400';
+      default: return 'text-slate-600 dark:text-slate-400';
+    }
+  };
+
+  const getBgColorClass = (color: string) => {
+    switch (color) {
+      case 'emerald': return 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-700';
+      case 'blue': return 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700';
+      case 'purple': return 'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-700';
+      case 'orange': return 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-700';
+      default: return 'bg-slate-50 dark:bg-slate-900/20 border-slate-200 dark:border-slate-700';
+    }
+  };
+
+  const getImpactColor = (impact: string) => {
+    switch (impact) {
+      case 'Alto': return 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20';
+      case 'Medio': return 'text-blue-600 bg-blue-50 dark:bg-blue-900/20';
+      case 'Bajo': return 'text-orange-600 bg-orange-50 dark:bg-orange-900/20';
+      default: return 'text-slate-600 bg-slate-50 dark:bg-slate-900/20';
+    }
+  };
 
   const timeframes = [
     { id: '7d', label: '7 días', active: selectedTimeframe === '7d' },
@@ -441,6 +580,15 @@ export const EarningsPage: React.FC = () => {
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Análisis por Plataformas</h3>
               <div className="flex space-x-2">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handlePlatformClick}
+                  className="border-slate-300 text-slate-600 hover:bg-slate-50"
+                >
+                  <Info className="w-4 h-4 mr-1" />
+                  Ver Detalles
+                </Button>
                 {platforms.map((platform) => (
                   <Button
                     key={platform.id}
@@ -462,7 +610,8 @@ export const EarningsPage: React.FC = () => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: 1.4 + index * 0.1 }}
-                  className="p-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800"
+                  className="p-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 cursor-pointer hover:shadow-lg transition-all duration-200"
+                  onClick={handlePlatformClick}
                 >
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
@@ -512,8 +661,19 @@ export const EarningsPage: React.FC = () => {
             transition={{ duration: 0.5, delay: 1.0 }}
             className="space-y-4"
           >
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Rendimiento por Horarios</h3>
-            <Card>
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Rendimiento por Horarios</h3>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleHourlyClick}
+                className="border-slate-300 text-slate-600 hover:bg-slate-50"
+              >
+                <Info className="w-4 h-4 mr-1" />
+                Ver Detalles
+              </Button>
+            </div>
+            <Card className="cursor-pointer hover:shadow-lg transition-all duration-200" onClick={handleHourlyClick}>
               <CardContent className="p-6">
                 <div className="space-y-4">
                   {hourlyData.map((hour, index) => (
@@ -550,37 +710,107 @@ export const EarningsPage: React.FC = () => {
             transition={{ duration: 0.5, delay: 1.2 }}
             className="space-y-4"
           >
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">💡 Recomendaciones de IA</h3>
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">💡 Recomendaciones de IA</h3>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleStrategyClick}
+                className="border-slate-300 text-slate-600 hover:bg-slate-50"
+              >
+                <BookOpen className="w-4 h-4 mr-1" />
+                Ver Estrategias
+              </Button>
+            </div>
             <div className="space-y-3">
-              <div className="flex items-start space-x-3 p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-700">
-                <TrendingUp className="w-5 h-5 text-emerald-600 dark:text-emerald-400 mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium text-slate-900 dark:text-white">Tendencia positiva</p>
-                  <p className="text-xs text-slate-600 dark:text-slate-400">
-                    Considera aumentar tu tasa de ahorro al 8%
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
-                <Clock className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium text-slate-900 dark:text-white">Optimiza horarios</p>
-                  <p className="text-xs text-slate-600 dark:text-slate-400">
-                    Los martes y jueves son tus días más productivos
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-700">
-                <Globe className="w-5 h-5 text-purple-600 dark:text-purple-400 mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium text-slate-900 dark:text-white">Diversifica ingresos</p>
-                  <p className="text-xs text-slate-600 dark:text-slate-400">
-                    Explora nuevas oportunidades en la gig economy
-                  </p>
-                </div>
-              </div>
+              {[
+                {
+                  id: 'trend-positive',
+                  title: 'Tendencia positiva',
+                  description: 'Considera aumentar tu tasa de ahorro al 8%',
+                  icon: <TrendingUp className="w-5 h-5 text-emerald-600 dark:text-emerald-400 mt-0.5" />,
+                  color: 'emerald',
+                  action: 'Ajustar Tasa'
+                },
+                {
+                  id: 'optimize-hours',
+                  title: 'Optimiza horarios',
+                  description: 'Los martes y jueves son tus días más productivos',
+                  icon: <Clock className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />,
+                  color: 'blue',
+                  action: 'Ver Horarios'
+                },
+                {
+                  id: 'diversify-income',
+                  title: 'Diversifica ingresos',
+                  description: 'Explora nuevas oportunidades en la gig economy',
+                  icon: <Globe className="w-5 h-5 text-purple-600 dark:text-purple-400 mt-0.5" />,
+                  color: 'purple',
+                  action: 'Explorar'
+                }
+              ].map((insight) => (
+                <motion.div
+                  key={insight.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 1.4 + Math.random() * 0.2 }}
+                  className={`flex items-start space-x-3 p-3 rounded-lg border cursor-pointer hover:shadow-md transition-all duration-200 ${getBgColorClass(insight.color)}`}
+                  onClick={() => handleInsightExpand(insight.id)}
+                >
+                  {insight.icon}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-slate-900 dark:text-white">{insight.title}</p>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">
+                      {insight.description}
+                    </p>
+                    <AnimatePresence>
+                      {expandedInsights.includes(insight.id) && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="space-y-2"
+                        >
+                          <div className="text-xs text-slate-500 dark:text-slate-500">
+                            <p>• Análisis basado en tus patrones de ingresos</p>
+                            <p>• Recomendación personalizada por IA</p>
+                            <p>• Potencial de mejora: +15-25%</p>
+                          </div>
+                          <Button 
+                            size="sm" 
+                            className="text-xs"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (insight.action === 'Ajustar Tasa') {
+                                navigate('/dashboard');
+                              } else if (insight.action === 'Ver Horarios') {
+                                handleHourlyClick();
+                              } else {
+                                handleStrategyClick();
+                              }
+                            }}
+                          >
+                            {insight.action}
+                          </Button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleInsightExpand(insight.id);
+                    }}
+                    className="text-slate-400 hover:text-slate-600"
+                  >
+                    {expandedInsights.includes(insight.id) ? (
+                      <ChevronUp className="w-4 h-4" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4" />
+                    )}
+                  </button>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
 
@@ -646,12 +876,448 @@ export const EarningsPage: React.FC = () => {
             <span>Ver Estrategias</span>
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
-          <Button variant="outline" size="lg" className="border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all duration-300 text-lg px-8 py-4 rounded-xl">
+          <Button 
+            variant="outline" 
+            size="lg" 
+            className="border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all duration-300 text-lg px-8 py-4 rounded-xl"
+            onClick={handleDownloadReport}
+          >
             <span>Descargar Reporte</span>
             <Download className="w-5 h-5 ml-2" />
           </Button>
         </div>
       </motion.div>
+
+      {/* Earning Modal */}
+      <AnimatePresence>
+        {showEarningModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowEarningModal(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 max-w-md w-full relative max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowEarningModal(null)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              
+              <div className="space-y-4">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <DollarSign className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">Detalles del Ingreso</h3>
+                </div>
+                
+                <div className="space-y-4">
+                  {earningsData
+                    .filter(earning => earning.id === showEarningModal)
+                    .map((earning) => (
+                      <div key={earning.id} className="space-y-4">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center">
+                            <DollarSign className="w-5 h-5 text-white" />
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-white text-sm">{earning.platform}</h4>
+                            <p className="text-xs text-slate-400">{new Date(earning.date).toLocaleDateString('es-MX')}</p>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="p-3 bg-slate-700/50 rounded-lg">
+                            <p className="text-xs text-slate-400">Monto</p>
+                            <p className="font-semibold text-white text-sm">${earning.amount.toFixed(2)}</p>
+                          </div>
+                          <div className="p-3 bg-slate-700/50 rounded-lg">
+                            <p className="text-xs text-slate-400">Plataforma</p>
+                            <p className="font-semibold text-white text-sm">{earning.platform}</p>
+                          </div>
+                          <div className="p-3 bg-slate-700/50 rounded-lg">
+                            <p className="text-xs text-slate-400">Fecha</p>
+                            <p className="font-semibold text-white text-sm">{new Date(earning.date).toLocaleDateString('es-MX')}</p>
+                          </div>
+                          <div className="p-3 bg-slate-700/50 rounded-lg">
+                            <p className="text-xs text-slate-400">% del Total</p>
+                            <p className="font-semibold text-white text-sm">{((earning.amount / totalEarnings) * 100).toFixed(1)}%</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex space-x-3 pt-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="flex-1 border-slate-600 text-slate-300"
+                            onClick={() => setShowEarningModal(null)}
+                          >
+                            Cerrar
+                          </Button>
+                          <Button 
+                            size="sm"
+                            className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
+                            onClick={() => navigate('/dashboard')}
+                          >
+                            Ver Dashboard
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Platform Modal */}
+      <AnimatePresence>
+        {showPlatformModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowPlatformModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 max-w-lg w-full relative max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowPlatformModal(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              
+              <div className="space-y-4">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <PieChart className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">Análisis por Plataformas</h3>
+                  <p className="text-sm text-slate-300">
+                    Distribución detallada de tus ingresos por plataforma.
+                  </p>
+                </div>
+                
+                <div className="space-y-3">
+                  {platformData.map((platform, index) => (
+                    <div key={platform.name} className="p-3 bg-slate-700/50 rounded-lg border border-slate-600">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-lg">{platform.icon}</span>
+                          <h4 className="font-semibold text-white text-sm">{platform.name}</h4>
+                        </div>
+                        <span className="text-sm font-bold text-white">{platform.percentage}%</span>
+                      </div>
+                      
+                      <div className="w-full h-2 bg-slate-600 rounded-full overflow-hidden mb-2">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${platform.percentage}%` }}
+                          transition={{ duration: 1, delay: index * 0.2 }}
+                          className={`h-full rounded-full ${
+                            platform.color === 'orange' ? 'bg-orange-500' :
+                            platform.color === 'black' ? 'bg-slate-800' :
+                            platform.color === 'yellow' ? 'bg-yellow-500' :
+                            'bg-slate-500'
+                          }`}
+                        />
+                      </div>
+                      
+                      <div className="text-xs text-slate-400 space-y-1">
+                        <p>Ingresos: ${platform.earnings.toFixed(2)}</p>
+                        <p>Promedio por día: ${(platform.earnings / 30).toFixed(2)}</p>
+                        <p>Rendimiento: {platform.percentage > 30 ? 'Excelente' : platform.percentage > 20 ? 'Bueno' : 'Regular'}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="flex justify-center pt-2">
+                  <Button 
+                    size="sm"
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    onClick={() => setShowPlatformModal(false)}
+                  >
+                    Entendido
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Hourly Modal */}
+      <AnimatePresence>
+        {showHourlyModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowHourlyModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 max-w-lg w-full relative max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowHourlyModal(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              
+              <div className="space-y-4">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <Clock className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">Rendimiento por Horarios</h3>
+                  <p className="text-sm text-slate-300">
+                    Análisis detallado de tus ingresos por franjas horarias.
+                  </p>
+                </div>
+                
+                <div className="space-y-3">
+                  {hourlyData.map((hour, index) => (
+                    <div key={hour.hour} className="p-3 bg-slate-700/50 rounded-lg border border-slate-600">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center space-x-2">
+                          <Clock className="w-4 h-4 text-slate-400" />
+                          <h4 className="font-semibold text-white text-sm">{hour.hour}h</h4>
+                        </div>
+                        <span className="text-sm font-bold text-white">${hour.earnings}</span>
+                      </div>
+                      
+                      <div className="w-full h-2 bg-slate-600 rounded-full overflow-hidden mb-2">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${hour.percentage}%` }}
+                          transition={{ duration: 1, delay: index * 0.2 }}
+                          className="h-full rounded-full bg-gradient-to-r from-blue-500 to-emerald-500"
+                        />
+                      </div>
+                      
+                      <div className="text-xs text-slate-400 space-y-1">
+                        <p>Porcentaje: {hour.percentage}%</p>
+                        <p>Promedio por hora: ${(hour.earnings / 3).toFixed(2)}</p>
+                        <p>Rendimiento: {hour.percentage > 30 ? 'Excelente' : hour.percentage > 20 ? 'Bueno' : 'Regular'}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="flex justify-center pt-2">
+                  <Button 
+                    size="sm"
+                    className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
+                    onClick={() => setShowHourlyModal(false)}
+                  >
+                    Entendido
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Report Modal */}
+      <AnimatePresence>
+        {showReportModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowReportModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 max-w-md w-full relative max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowReportModal(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              
+              <div className="space-y-4">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <Download className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">Reporte de Ingresos</h3>
+                  <p className="text-sm text-slate-300">
+                    Descarga un reporte completo de tus ingresos en formato PDF.
+                  </p>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-3 bg-slate-700/50 rounded-lg text-center">
+                      <p className="text-xs text-slate-400">Ingresos Totales</p>
+                      <p className="font-semibold text-white text-sm">${reportData.totalEarnings.toFixed(2)}</p>
+                    </div>
+                    <div className="p-3 bg-slate-700/50 rounded-lg text-center">
+                      <p className="text-xs text-slate-400">Promedio Diario</p>
+                      <p className="font-semibold text-white text-sm">${reportData.averageEarnings.toFixed(2)}</p>
+                    </div>
+                    <div className="p-3 bg-slate-700/50 rounded-lg text-center">
+                      <p className="text-xs text-slate-400">Mejor Día</p>
+                      <p className="font-semibold text-white text-sm">${reportData.maxEarnings.toFixed(2)}</p>
+                    </div>
+                    <div className="p-3 bg-slate-700/50 rounded-lg text-center">
+                      <p className="text-xs text-slate-400">Volatilidad</p>
+                      <p className="font-semibold text-white text-sm">{reportData.volatility.toFixed(1)}%</p>
+                    </div>
+                  </div>
+                  
+                  <div className="text-xs text-slate-400 text-center">
+                    Generado el: {reportData.generatedAt}
+                  </div>
+                </div>
+                
+                <div className="flex space-x-3 pt-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="flex-1 border-slate-600 text-slate-300"
+                    onClick={() => setShowReportModal(false)}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button 
+                    size="sm"
+                    className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
+                    onClick={() => {
+                      // Aquí se implementaría la descarga real
+                      console.log('Descargando reporte de ingresos...');
+                      setShowReportModal(false);
+                    }}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Descargar PDF
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Strategy Modal */}
+      <AnimatePresence>
+        {showStrategyModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowStrategyModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 max-w-lg w-full relative max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowStrategyModal(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              
+              <div className="space-y-4">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <Target className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">Estrategias de Optimización</h3>
+                  <p className="text-sm text-slate-300">
+                    Recomendaciones personalizadas para maximizar tus ingresos.
+                  </p>
+                </div>
+                
+                <div className="space-y-3">
+                  {optimizationStrategies.map((strategy) => (
+                    <div key={strategy.id} className={`p-3 rounded-lg border ${getBgColorClass(strategy.color)}`}>
+                      <div className="flex items-start space-x-3">
+                        <div className={`${getColorClass(strategy.color)} flex-shrink-0`}>
+                          {strategy.icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-slate-900 dark:text-white text-sm mb-1">{strategy.title}</h4>
+                          <p className="text-xs text-slate-600 dark:text-slate-400 mb-2 leading-relaxed">
+                            {strategy.description}
+                          </p>
+                          <div className="flex items-center space-x-2 text-xs">
+                            <span className={`px-2 py-1 rounded-full ${getImpactColor(strategy.impact)}`}>
+                              Impacto: {strategy.impact}
+                            </span>
+                            <span className="text-slate-500 dark:text-slate-500">
+                              Implementación: {strategy.implementation}
+                            </span>
+                          </div>
+                          <div className="mt-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                            Incremento estimado: {strategy.estimatedIncrease}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="flex space-x-3 pt-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="flex-1 border-slate-600 text-slate-300"
+                    onClick={() => setShowStrategyModal(false)}
+                  >
+                    Cerrar
+                  </Button>
+                  <Button 
+                    size="sm"
+                    className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                    onClick={() => navigate('/education')}
+                  >
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Aprender Más
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }; 
