@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { Layout } from '@components/shared/Layout';
+import { Home } from '@/pages/Home';
 import { Dashboard } from '@/pages/Dashboard';
 import { Portfolio } from '@/pages/Portfolio';
 import { EarningsPage } from '@/pages/Earnings';
@@ -31,6 +32,10 @@ export const AppRouter = createBrowserRouter([
     children: [
       {
         index: true,
+        element: <Home />
+      },
+      {
+        path: 'dashboard',
         element: <Dashboard />
       },
       {

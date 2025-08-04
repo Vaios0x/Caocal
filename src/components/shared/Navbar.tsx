@@ -43,10 +43,17 @@ const navSections: NavSection[] = [
     title: 'Principal',
     items: [
       {
-        id: 'dashboard',
-        label: 'Dashboard',
+        id: 'home',
+        label: 'Inicio',
         path: '/',
         icon: Home,
+        description: 'Landing page principal'
+      },
+      {
+        id: 'dashboard',
+        label: 'Dashboard',
+        path: '/dashboard',
+        icon: PieChart,
         description: 'Vista general de tus finanzas'
       },
       {
