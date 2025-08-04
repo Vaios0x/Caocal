@@ -771,7 +771,7 @@ export const EarningsPage: React.FC = () => {
                           exit={{ opacity: 0, height: 0 }}
                           className="space-y-2"
                         >
-                          <div className="text-xs text-slate-500 dark:text-slate-500">
+                          <div className="text-xs text-slate-700 dark:text-slate-200 font-medium">
                             <p>• Análisis basado en tus patrones de ingresos</p>
                             <p>• Recomendación personalizada por IA</p>
                             <p>• Potencial de mejora: +15-25%</p>
