@@ -10,13 +10,7 @@ import { RwaTokens } from '@/pages/RwaTokens';
 import { AiInsights } from '@/pages/AiInsights';
 import { Education } from '@/pages/Education';
 import { Calculators } from '@/pages/Calculators';
-
-const Help = () => (
-  <div className="text-center space-y-4 py-20">
-    <h1 className="text-4xl font-bold gradient-text">Centro de Ayuda</h1>
-    <p className="text-muted-foreground">Próximamente: Soporte y documentación completa</p>
-  </div>
-);
+import { Help } from '@/pages/Help';
 
 const Settings = () => (
   <div className="text-center space-y-4 py-20">
