@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { 
   TrendingUp, 
   BarChart3, 
@@ -18,7 +19,21 @@ import {
   AlertTriangle,
   CheckCircle,
   Clock,
-  Star
+  Star,
+  X,
+  Eye,
+  Edit,
+  Share2,
+  Download,
+  Plus,
+  Play,
+  Pause,
+  RefreshCw,
+  ArrowRight,
+  Bookmark,
+  Calendar,
+  Users,
+  TrendingDown
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
@@ -55,6 +70,16 @@ interface InvestmentStrategy {
 export const Investments: React.FC = () => {
   const [selectedStrategy, setSelectedStrategy] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'strategies' | 'portfolio'>('overview');
+  const navigate = useNavigate();
+
+  // Estados para modales
+  const [showInvestmentDetailsModal, setShowInvestmentDetailsModal] = useState<string | null>(null);
+  const [showStrategyDetailsModal, setShowStrategyDetailsModal] = useState<string | null>(null);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [showCreateInvestmentModal, setShowCreateInvestmentModal] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showPortfolioModal, setShowPortfolioModal] = useState(false);
 
   // Datos simulados de inversiones
   const investments: Investment[] = [
@@ -187,6 +212,65 @@ export const Investments: React.FC = () => {
     }
   };
 
+  // Nuevas funciones de manejo
+  const handleInvestmentClick = (investmentId: string) => {
+    setShowInvestmentDetailsModal(investmentId);
+  };
+
+  const handleStrategyClick = (strategyId: string) => {
+    setShowStrategyDetailsModal(strategyId);
+  };
+
+  const handleSettingsClick = () => {
+    setShowSettingsModal(true);
+  };
+
+  const handleReportClick = () => {
+    setShowReportModal(true);
+  };
+
+  const handleCreateInvestment = () => {
+    setShowCreateInvestmentModal(true);
+  };
+
+  const handleInfoClick = () => {
+    setShowInfoModal(true);
+  };
+
+  const handlePortfolioClick = () => {
+    setShowPortfolioModal(true);
+  };
+
+  const handleEditInvestment = (investmentId: string) => {
+    navigate('/settings');
+  };
+
+  const handleShareInvestment = (investmentId: string) => {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Mi Inversión',
+        text: 'Mira mi inversión en Caocal',
+        url: window.location.href
+      });
+    } else {
+      alert('Función de compartir no disponible en este navegador');
+    }
+  };
+
+  const handleDownloadReport = () => {
+    alert('Reporte descargado exitosamente!');
+    setShowReportModal(false);
+  };
+
+  const handleApplyStrategy = (strategyId: string) => {
+    setShowStrategyDetailsModal(null);
+    navigate('/portfolio');
+  };
+
+  const handleBookmarkInvestment = (investmentId: string) => {
+    console.log('Inversión marcada como favorita:', investmentId);
+  };
+
   return (
     <div className="space-y-8 lg:space-y-12">
       {/* Header de la página */}
@@ -304,10 +388,30 @@ export const Investments: React.FC = () => {
           {/* Gráfico de distribución */}
           <Card className="card-hover">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <PieChart className="w-5 h-5 text-primary" />
-                <span>Distribución del Portafolio</span>
-              </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center space-x-2">
+                  <PieChart className="w-5 h-5 text-primary" />
+                  <span>Distribución del Portafolio</span>
+                </CardTitle>
+                <div className="flex items-center space-x-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleReportClick}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Reporte
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleSettingsClick}
+                  >
+                    <Settings className="w-4 h-4 mr-2" />
+                    Configurar
+                  </Button>
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
@@ -442,8 +546,12 @@ export const Investments: React.FC = () => {
                   <Button 
                     className="w-full mt-4"
                     variant={selectedStrategy === strategy.id ? "default" : "outline"}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleStrategyClick(strategy.id);
+                    }}
                   >
-                    {selectedStrategy === strategy.id ? 'Estrategia Seleccionada' : 'Seleccionar Estrategia'}
+                    {selectedStrategy === strategy.id ? 'Estrategia Seleccionada' : 'Ver Detalles'}
                   </Button>
                 </CardContent>
               </Card>
@@ -453,10 +561,20 @@ export const Investments: React.FC = () => {
           {/* Información adicional */}
           <Card className="card-hover">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Info className="w-5 h-5 text-primary" />
-                <span>Información Importante</span>
-              </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center space-x-2">
+                  <Info className="w-5 h-5 text-primary" />
+                  <span>Información Importante</span>
+                </CardTitle>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleInfoClick}
+                >
+                  <Info className="w-4 h-4 mr-2" />
+                  Más Info
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -516,10 +634,30 @@ export const Investments: React.FC = () => {
           {/* Lista de inversiones */}
           <Card className="card-hover">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <LineChart className="w-5 h-5 text-primary" />
-                <span>Mis Inversiones</span>
-              </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center space-x-2">
+                  <LineChart className="w-5 h-5 text-primary" />
+                  <span>Mis Inversiones</span>
+                </CardTitle>
+                <div className="flex items-center space-x-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleCreateInvestment}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Nueva Inversión
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handlePortfolioClick}
+                  >
+                    <Eye className="w-4 h-4 mr-2" />
+                    Ver Detalles
+                  </Button>
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -529,7 +667,8 @@ export const Investments: React.FC = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.1 }}
-                    className="flex items-center justify-between p-4 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-200"
+                    className="flex items-center justify-between p-4 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-200 cursor-pointer"
+                    onClick={() => handleInvestmentClick(investment.id)}
                   >
                     <div className="flex items-center space-x-4">
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${investment.color.replace('text-', 'bg-')} bg-opacity-10 border border-current border-opacity-20`}>
@@ -568,6 +707,39 @@ export const Investments: React.FC = () => {
                       <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getRiskColor(investment.risk)}`}>
                         {getRiskLabel(investment.risk)}
                       </span>
+
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleBookmarkInvestment(investment.id);
+                          }}
+                        >
+                          <Bookmark className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleShareInvestment(investment.id);
+                          }}
+                        >
+                          <Share2 className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditInvestment(investment.id);
+                          }}
+                        >
+                          <Edit className="w-4 h-4 mr-2" />
+                          Editar
+                        </Button>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
@@ -623,5 +795,578 @@ export const Investments: React.FC = () => {
         </motion.div>
       )}
     </div>
+
+    {/* Modal de detalles de inversión */}
+    <AnimatePresence>
+      {showInvestmentDetailsModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowInvestmentDetailsModal(null)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-semibold">Detalles de Inversión</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowInvestmentDetailsModal(null)}
+                aria-label="Cerrar modal"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+            
+            {showInvestmentDetailsModal && (() => {
+              const investment = investments.find(i => i.id === showInvestmentDetailsModal);
+              if (!investment) return null;
+              
+              return (
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${investment.color.replace('text-', 'bg-')} bg-opacity-10 border border-current border-opacity-20`}>
+                      {investment.icon}
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-lg">{investment.name}</h4>
+                      <p className="text-sm text-muted-foreground">{investment.category}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="text-muted-foreground">Valor</span>
+                      <p className="font-medium">${investment.amount.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Porcentaje</span>
+                      <p className="font-medium">{investment.percentage}%</p>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Cambio</span>
+                      <p className={`font-medium ${investment.change >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                        {investment.change >= 0 ? '+' : ''}${investment.change.toFixed(2)}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Riesgo</span>
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getRiskColor(investment.risk)}`}>
+                        {getRiskLabel(investment.risk)}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between pt-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setShowInvestmentDetailsModal(null);
+                        handleEditInvestment(investment.id);
+                      }}
+                    >
+                      <Edit className="w-4 h-4 mr-2" />
+                      Editar
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setShowInvestmentDetailsModal(null);
+                        handleShareInvestment(investment.id);
+                      }}
+                    >
+                      <Share2 className="w-4 h-4 mr-2" />
+                      Compartir
+                    </Button>
+                  </div>
+                </div>
+              );
+            })()}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+    {/* Modal de detalles de estrategia */}
+    <AnimatePresence>
+      {showStrategyDetailsModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowStrategyDetailsModal(null)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-semibold">Detalles de Estrategia</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowStrategyDetailsModal(null)}
+                aria-label="Cerrar modal"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+            
+            {showStrategyDetailsModal && (() => {
+              const strategy = strategies.find(s => s.id === showStrategyDetailsModal);
+              if (!strategy) return null;
+              
+              return (
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${strategy.color.replace('text-', 'bg-')} bg-opacity-10 border border-current border-opacity-20`}>
+                      {strategy.icon}
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-lg">{strategy.name}</h4>
+                      <p className="text-sm text-muted-foreground">{strategy.description}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="text-muted-foreground">Retorno Esperado</span>
+                      <p className="font-medium">{strategy.expectedReturn}%</p>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Riesgo</span>
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getRiskColor(strategy.riskLevel)}`}>
+                        {getRiskLabel(strategy.riskLevel)}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Inversión Mínima</span>
+                      <p className="font-medium">${strategy.minInvestment.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Duración</span>
+                      <p className="font-medium">{strategy.duration}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-muted-foreground">Características:</p>
+                    <ul className="space-y-1">
+                      {strategy.features.map((feature, index) => (
+                        <li key={index} className="flex items-center space-x-2 text-sm">
+                          <CheckCircle className="w-4 h-4 text-emerald-500" />
+                          <span className="text-slate-700 dark:text-slate-300">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div className="flex items-center justify-between pt-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setShowStrategyDetailsModal(null);
+                        handleSettingsClick();
+                      }}
+                    >
+                      <Settings className="w-4 h-4 mr-2" />
+                      Configurar
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        handleApplyStrategy(strategy.id);
+                      }}
+                    >
+                      <ArrowRight className="w-4 h-4 mr-2" />
+                      Aplicar Estrategia
+                    </Button>
+                  </div>
+                </div>
+              );
+            })()}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+    {/* Modal de configuración */}
+    <AnimatePresence>
+      {showSettingsModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowSettingsModal(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-semibold">Configuración de Inversiones</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowSettingsModal(false)}
+                aria-label="Cerrar modal"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+            
+            <div className="space-y-4">
+              <p className="text-muted-foreground">
+                Configura tus preferencias de inversión y estrategias.
+              </p>
+              
+              <div className="flex items-center justify-end space-x-3 pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowSettingsModal(false)}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowSettingsModal(false);
+                    navigate('/settings');
+                  }}
+                >
+                  <Settings className="w-4 h-4 mr-2" />
+                  Ir a Configuración
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+    {/* Modal de reporte */}
+    <AnimatePresence>
+      {showReportModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowReportModal(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-semibold">Descargar Reporte</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowReportModal(false)}
+                aria-label="Cerrar modal"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+            
+            <div className="space-y-4">
+              <p className="text-muted-foreground">
+                Selecciona el formato y período para tu reporte de inversiones.
+              </p>
+              
+              <div className="space-y-3">
+                <div>
+                  <label className="text-sm font-medium">Formato</label>
+                  <select className="w-full p-2 border rounded-lg mt-1">
+                    <option>PDF</option>
+                    <option>CSV</option>
+                    <option>Excel</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="text-sm font-medium">Período</label>
+                  <select className="w-full p-2 border rounded-lg mt-1">
+                    <option>Últimos 30 días</option>
+                    <option>Últimos 90 días</option>
+                    <option>Este año</option>
+                    <option>Personalizado</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-end space-x-3 pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowReportModal(false)}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={handleDownloadReport}
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Descargar
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+    {/* Modal de nueva inversión */}
+    <AnimatePresence>
+      {showCreateInvestmentModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowCreateInvestmentModal(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-semibold">Nueva Inversión</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowCreateInvestmentModal(false)}
+                aria-label="Cerrar modal"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+            
+            <div className="space-y-4">
+              <p className="text-muted-foreground">
+                Esta funcionalidad estará disponible próximamente.
+              </p>
+              
+              <div className="flex items-center justify-end space-x-3 pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowCreateInvestmentModal(false)}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowCreateInvestmentModal(false);
+                    navigate('/portfolio');
+                  }}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Ir a Portafolio
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+    {/* Modal de información */}
+    <AnimatePresence>
+      {showInfoModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowInfoModal(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-semibold">Información de Inversiones</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowInfoModal(false)}
+                aria-label="Cerrar modal"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-start space-x-3 p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                  <AlertTriangle className="w-5 h-5 text-orange-500 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium">Riesgo de Inversión</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Todas las inversiones conllevan riesgo. El valor puede subir o bajar.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-3 p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                  <Clock className="w-5 h-5 text-blue-500 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium">Horizonte Temporal</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Las inversiones a largo plazo ofrecen mejores retornos.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-3 p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                  <Shield className="w-5 h-5 text-emerald-500 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium">Diversificación</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Diversificar tu portafolio ayuda a reducir el riesgo total.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-end space-x-3 pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowInfoModal(false)}
+                >
+                  Cerrar
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowInfoModal(false);
+                    navigate('/education');
+                  }}
+                >
+                  <Info className="w-4 h-4 mr-2" />
+                  Aprender Más
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+    {/* Modal de detalles del portafolio */}
+    <AnimatePresence>
+      {showPortfolioModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowPortfolioModal(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-semibold">Detalles del Portafolio</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowPortfolioModal(false)}
+                aria-label="Cerrar modal"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-muted-foreground">Valor Total</span>
+                  <p className="font-medium">${totalInvestment.toLocaleString()}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Cambio Hoy</span>
+                  <p className={`font-medium ${totalChange >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                    {totalChange >= 0 ? '+' : ''}${totalChange.toFixed(2)}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Inversiones</span>
+                  <p className="font-medium">{investments.length}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Rendimiento</span>
+                  <p className={`font-medium ${totalChangePercent >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                    {totalChangePercent >= 0 ? '+' : ''}{totalChangePercent.toFixed(1)}%
+                  </p>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <h4 className="font-medium">Distribución por Categoría</h4>
+                {investments.map((investment) => (
+                  <div key={investment.id} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-4 h-4 rounded-full ${investment.color.replace('text-', 'bg-')}`}></div>
+                      <span className="text-sm font-medium">{investment.name}</span>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-medium">{investment.percentage}%</p>
+                      <p className="text-xs text-muted-foreground">${investment.amount.toLocaleString()}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="flex items-center justify-between pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowPortfolioModal(false);
+                    navigate('/portfolio');
+                  }}
+                >
+                  <Eye className="w-4 h-4 mr-2" />
+                  Ver Portafolio Completo
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowPortfolioModal(false);
+                    handleReportClick();
+                  }}
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Descargar Reporte
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }; 
