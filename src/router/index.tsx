@@ -11,7 +11,7 @@ import { AiInsights } from '@/pages/AiInsights';
 import { Education } from '@/pages/Education';
 import { Calculators } from '@/pages/Calculators';
 import { Help } from '@/pages/Help';
-import { Settings } from '@/pages/Settings';
+import { SettingsPage } from '@/pages/Settings';
 
 export const AppRouter = createBrowserRouter([
   {
@@ -64,7 +64,7 @@ export const AppRouter = createBrowserRouter([
       },
       {
         path: 'settings',
-        element: <Settings />
+        element: <SettingsPage />
       }
     ]
   }

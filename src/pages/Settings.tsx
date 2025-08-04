@@ -141,7 +141,7 @@ const appSettings = [
   }
 ];
 
-export const Settings: React.FC = () => {
+export const SettingsPage: React.FC = () => {
   const [expandedSection, setExpandedSection] = useState<string | null>('personal');
   const [showSensitiveData, setShowSensitiveData] = useState(false);
 
@@ -269,21 +269,23 @@ export const Settings: React.FC = () => {
                   viewport={{ once: true }}
                 >
                   <Card className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-all duration-300">
-                    <CardHeader className="cursor-pointer" onClick={() => setExpandedSection(expandedSection === section.id ? null : section.id)}>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                            {section.icon}
+                    <div className="cursor-pointer" onClick={() => setExpandedSection(expandedSection === section.id ? null : section.id)}>
+                      <CardHeader>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                              {section.icon}
+                            </div>
+                            <CardTitle className="text-white">{section.title}</CardTitle>
                           </div>
-                          <CardTitle className="text-white">{section.title}</CardTitle>
+                          {expandedSection === section.id ? (
+                            <ChevronUp className="w-5 h-5 text-slate-400" />
+                          ) : (
+                            <ChevronDown className="w-5 h-5 text-slate-400" />
+                          )}
                         </div>
-                        {expandedSection === section.id ? (
-                          <ChevronUp className="w-5 h-5 text-slate-400" />
-                        ) : (
-                          <ChevronDown className="w-5 h-5 text-slate-400" />
-                        )}
-                      </div>
-                    </CardHeader>
+                      </CardHeader>
+                    </div>
                     
                     <AnimatePresence>
                       {expandedSection === section.id && (
@@ -330,21 +332,23 @@ export const Settings: React.FC = () => {
                   viewport={{ once: true }}
                 >
                   <Card className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-all duration-300">
-                    <CardHeader className="cursor-pointer" onClick={() => setExpandedSection(expandedSection === section.id ? null : section.id)}>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                            {section.icon}
+                    <div className="cursor-pointer" onClick={() => setExpandedSection(expandedSection === section.id ? null : section.id)}>
+                      <CardHeader>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                              {section.icon}
+                            </div>
+                            <CardTitle className="text-white">{section.title}</CardTitle>
                           </div>
-                          <CardTitle className="text-white">{section.title}</CardTitle>
+                          {expandedSection === section.id ? (
+                            <ChevronUp className="w-5 h-5 text-slate-400" />
+                          ) : (
+                            <ChevronDown className="w-5 h-5 text-slate-400" />
+                          )}
                         </div>
-                        {expandedSection === section.id ? (
-                          <ChevronUp className="w-5 h-5 text-slate-400" />
-                        ) : (
-                          <ChevronDown className="w-5 h-5 text-slate-400" />
-                        )}
-                      </div>
-                    </CardHeader>
+                      </CardHeader>
+                    </div>
                     
                     <AnimatePresence>
                       {expandedSection === section.id && (
@@ -397,21 +401,23 @@ export const Settings: React.FC = () => {
                 viewport={{ once: true }}
               >
                 <Card className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-all duration-300">
-                  <CardHeader className="cursor-pointer" onClick={() => setExpandedSection(expandedSection === section.id ? null : section.id)}>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                          {section.icon}
+                  <div className="cursor-pointer" onClick={() => setExpandedSection(expandedSection === section.id ? null : section.id)}>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                            {section.icon}
+                          </div>
+                          <CardTitle className="text-white">{section.title}</CardTitle>
                         </div>
-                        <CardTitle className="text-white">{section.title}</CardTitle>
+                        {expandedSection === section.id ? (
+                          <ChevronUp className="w-5 h-5 text-slate-400" />
+                        ) : (
+                          <ChevronDown className="w-5 h-5 text-slate-400" />
+                        )}
                       </div>
-                      {expandedSection === section.id ? (
-                        <ChevronUp className="w-5 h-5 text-slate-400" />
-                      ) : (
-                        <ChevronDown className="w-5 h-5 text-slate-400" />
-                      )}
-                    </div>
-                  </CardHeader>
+                    </CardHeader>
+                  </div>
                   
                   <AnimatePresence>
                     {expandedSection === section.id && (
