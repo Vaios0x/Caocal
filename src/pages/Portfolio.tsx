@@ -4,7 +4,7 @@ import { useUserData } from '../hooks/useUserData.js';
 import { PortfolioValueChart } from '../components/portfolio/PortfolioValueChart';
 import { PerformanceChart } from '../components/portfolio/PerformanceChart';
 import { RwaPortfolioCard } from '../components/portfolio/RwaPortfolioCard';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent } from '../components/ui/Card';
 import { 
@@ -21,16 +21,47 @@ import {
   Download, 
   Eye, 
   EyeOff,
-  Filter
+  Filter,
+  X,
+  ExternalLink,
+  Share2,
+  Info,
+  AlertCircle,
+  CheckCircle,
+  Plus,
+  Minus,
+  Edit,
+  Trash2,
+  Star,
+  BookOpen,
+  Calculator,
+  ChevronRight,
+  ChevronDown,
+  ChevronUp,
+  ArrowRight,
+  Lock,
+  Zap,
+  Users,
+  Award,
+  Clock,
+  Calendar,
+  Bell,
+  MessageCircle
 } from 'lucide-react';
 import type { Asset, Portfolio as PortfolioType } from '../data/mockData.js';
 
 export const Portfolio: React.FC = () => {
+  const navigate = useNavigate();
   const { portfolio, isLoading, error } = useUserData();
   const [showSensitiveData, setShowSensitiveData] = useState(false);
   const [sortBy, setSortBy] = useState<'value' | 'change' | 'name'>('value');
-  const [selectedAsset] = useState<string | null>(null);
+  const [selectedAsset, setSelectedAsset] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [showAssetModal, setShowAssetModal] = useState<string | null>(null);
+  const [showDistributionModal, setShowDistributionModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [showRwaInfoModal, setShowRwaInfoModal] = useState(false);
+  const [expandedAssets, setExpandedAssets] = useState<string[]>([]);
 
   // Calcular estadísticas dinámicas
   const portfolioData = portfolio as PortfolioType;
@@ -40,13 +71,6 @@ export const Portfolio: React.FC = () => {
   const totalChange24h = assets.reduce((sum: number, asset: Asset) => sum + asset.change24h, 0);
   const averageChange24h = totalChange24h / (assets.length || 1);
   const totalTokens = assets.reduce((sum: number, asset: Asset) => sum + asset.amount, 0);
-  
-  // Simular datos de distribución
-  const distributionData = [
-    { type: 'Bonos', percentage: 45, color: 'blue' },
-    { type: 'Inmobiliario', percentage: 35, color: 'emerald' },
-    { type: 'Commodities', percentage: 20, color: 'orange' }
-  ];
 
   const sortOptions = [
     { id: 'value', label: 'Valor', active: sortBy === 'value' },
@@ -67,6 +91,97 @@ export const Portfolio: React.FC = () => {
         return 0;
     }
   });
+  
+  // Simular datos de distribución
+  const distributionData = [
+    { type: 'Bonos', percentage: 45, color: 'blue' },
+    { type: 'Inmobiliario', percentage: 35, color: 'emerald' },
+    { type: 'Commodities', percentage: 20, color: 'orange' }
+  ];
+
+  // Datos de información RWA
+  const rwaInfo = [
+    {
+      id: 'security',
+      title: 'Seguridad',
+      description: 'Tus activos están protegidos por tecnología blockchain y regulaciones financieras.',
+      icon: <Shield className="w-5 h-5" />,
+      color: 'emerald'
+    },
+    {
+      id: 'growth',
+      title: 'Crecimiento',
+      description: 'Los activos del mundo real generan rendimientos reales, no solo inflación.',
+      icon: <TrendingUp className="w-5 h-5" />,
+      color: 'blue'
+    },
+    {
+      id: 'diversification',
+      title: 'Diversificación',
+      description: 'Acceso a diferentes tipos de activos para reducir el riesgo de tu portafolio.',
+      icon: <Globe className="w-5 h-5" />,
+      color: 'purple'
+    }
+  ];
+
+  // Datos de reporte
+  const reportData = {
+    totalValue: totalValue,
+    totalChange: averageChange24h,
+    totalAssets: assets.length,
+    totalTokens: totalTokens,
+    distribution: distributionData,
+    topPerformers: sortedAssets.slice(0, 3),
+    generatedAt: new Date().toLocaleString('es-MX')
+  };
+
+  const handleAssetClick = (assetSymbol: string) => {
+    setShowAssetModal(assetSymbol);
+  };
+
+  const handleDistributionClick = () => {
+    setShowDistributionModal(true);
+  };
+
+  const handleDownloadReport = () => {
+    setShowReportModal(true);
+  };
+
+  const handleRwaInfoClick = () => {
+    setShowRwaInfoModal(true);
+  };
+
+  const handleAssetExpand = (assetSymbol: string) => {
+    if (expandedAssets.includes(assetSymbol)) {
+      setExpandedAssets(expandedAssets.filter(symbol => symbol !== assetSymbol));
+    } else {
+      setExpandedAssets([...expandedAssets, assetSymbol]);
+    }
+  };
+
+  const handleAdjustRate = () => {
+    navigate('/dashboard');
+  };
+
+  const getColorClass = (color: string) => {
+    switch (color) {
+      case 'emerald': return 'text-emerald-600 dark:text-emerald-400';
+      case 'blue': return 'text-blue-600 dark:text-blue-400';
+      case 'purple': return 'text-purple-600 dark:text-purple-400';
+      case 'orange': return 'text-orange-600 dark:text-orange-400';
+      default: return 'text-slate-600 dark:text-slate-400';
+    }
+  };
+
+  const getBgColorClass = (color: string) => {
+    switch (color) {
+      case 'emerald': return 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-700';
+      case 'blue': return 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700';
+      case 'purple': return 'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-700';
+      case 'orange': return 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-700';
+      default: return 'bg-slate-50 dark:bg-slate-900/20 border-slate-200 dark:border-slate-700';
+    }
+  };
 
   if (isLoading) {
     return (
@@ -332,8 +447,19 @@ export const Portfolio: React.FC = () => {
             transition={{ duration: 0.5, delay: 1.0 }}
             className="space-y-4"
           >
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Distribución</h3>
-            <Card>
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Distribución</h3>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleDistributionClick}
+                className="border-slate-300 text-slate-600 hover:bg-slate-50"
+              >
+                <Info className="w-4 h-4 mr-1" />
+                Ver Detalles
+              </Button>
+            </div>
+            <Card className="cursor-pointer hover:shadow-lg transition-all duration-300" onClick={handleDistributionClick}>
               <CardContent className="p-6">
                 <div className="space-y-4">
                   {distributionData.map((item, index) => (
@@ -409,37 +535,39 @@ export const Portfolio: React.FC = () => {
             transition={{ duration: 0.5, delay: 1.4 }}
             className="space-y-4"
           >
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">¿Por qué RWA?</h3>
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">¿Por qué RWA?</h3>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleRwaInfoClick}
+                className="border-slate-300 text-slate-600 hover:bg-slate-50"
+              >
+                <BookOpen className="w-4 h-4 mr-1" />
+                Saber Más
+              </Button>
+            </div>
             <div className="space-y-3">
-              <div className="flex items-start space-x-3 p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-700">
-                <Shield className="w-5 h-5 text-emerald-600 dark:text-emerald-400 mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium text-slate-900 dark:text-white">Seguridad</p>
-                  <p className="text-xs text-slate-600 dark:text-slate-400">
-                    Tus activos están protegidos por tecnología blockchain y regulaciones financieras.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
-                <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium text-slate-900 dark:text-white">Crecimiento</p>
-                  <p className="text-xs text-slate-600 dark:text-slate-400">
-                    Los activos del mundo real generan rendimientos reales, no solo inflación.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-700">
-                <Globe className="w-5 h-5 text-purple-600 dark:text-purple-400 mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium text-slate-900 dark:text-white">Diversificación</p>
-                  <p className="text-xs text-slate-600 dark:text-slate-400">
-                    Acceso a diferentes tipos de activos para reducir el riesgo de tu portafolio.
-                  </p>
-                </div>
-              </div>
+              {rwaInfo.map((info, index) => (
+                <motion.div
+                  key={info.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 1.6 + index * 0.1 }}
+                  className={`flex items-start space-x-3 p-3 rounded-lg border cursor-pointer hover:shadow-md transition-all duration-200 ${getBgColorClass(info.color)}`}
+                  onClick={handleRwaInfoClick}
+                >
+                  <div className={`${getColorClass(info.color)}`}>
+                    {info.icon}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-slate-900 dark:text-white">{info.title}</p>
+                    <p className="text-xs text-slate-600 dark:text-slate-400">
+                      {info.description}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
         </motion.div>
@@ -466,12 +594,358 @@ export const Portfolio: React.FC = () => {
               <Settings className="w-5 h-5 ml-2" />
             </Button>
           </Link>
-          <Button variant="outline" size="lg" className="border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all duration-300 text-lg px-8 py-4 rounded-xl">
+          <Button 
+            variant="outline" 
+            size="lg" 
+            className="border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all duration-300 text-lg px-8 py-4 rounded-xl"
+            onClick={handleDownloadReport}
+          >
             <span>Descargar Reporte</span>
             <Download className="w-5 h-5 ml-2" />
           </Button>
         </div>
       </motion.div>
+
+      {/* Asset Modal */}
+      <AnimatePresence>
+        {showAssetModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowAssetModal(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-8 max-w-lg w-full relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowAssetModal(null)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              
+              <div className="space-y-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Globe className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">Detalles del Activo</h3>
+                </div>
+                
+                <div className="space-y-4">
+                  {assets
+                    .filter(asset => asset.symbol === showAssetModal)
+                    .map((asset) => (
+                      <div key={asset.symbol} className="space-y-4">
+                        <div className="flex items-center space-x-3">
+                          <img src={asset.imageUrl} alt={asset.name} className="w-12 h-12 rounded-lg" />
+                          <div>
+                            <h4 className="font-semibold text-white">{asset.name}</h4>
+                            <p className="text-sm text-slate-400">{asset.symbol}</p>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="p-3 bg-slate-700/50 rounded-lg">
+                            <p className="text-xs text-slate-400">Valor</p>
+                            <p className="font-semibold text-white">${asset.value.toFixed(2)}</p>
+                          </div>
+                          <div className="p-3 bg-slate-700/50 rounded-lg">
+                            <p className="text-xs text-slate-400">Cantidad</p>
+                            <p className="font-semibold text-white">{asset.amount.toFixed(4)}</p>
+                          </div>
+                          <div className="p-3 bg-slate-700/50 rounded-lg">
+                            <p className="text-xs text-slate-400">Cambio 24h</p>
+                            <p className={`font-semibold ${asset.change24h >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                              {asset.change24h >= 0 ? '+' : ''}{asset.change24h.toFixed(2)}%
+                            </p>
+                          </div>
+                          <div className="p-3 bg-slate-700/50 rounded-lg">
+                            <p className="text-xs text-slate-400">% del Portafolio</p>
+                            <p className="font-semibold text-white">{((asset.value / totalValue) * 100).toFixed(1)}%</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex space-x-3">
+                          <Button 
+                            variant="outline" 
+                            className="flex-1 border-slate-600 text-slate-300"
+                            onClick={() => setShowAssetModal(null)}
+                          >
+                            Cerrar
+                          </Button>
+                          <Button 
+                            className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
+                            onClick={() => navigate('/rwa')}
+                          >
+                            Ver Más Activos
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Distribution Modal */}
+      <AnimatePresence>
+        {showDistributionModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowDistributionModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-8 max-w-2xl w-full relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowDistributionModal(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              
+              <div className="space-y-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <PieChart className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">Distribución del Portafolio</h3>
+                  <p className="text-slate-300">
+                    Análisis detallado de la distribución de tus activos por categoría.
+                  </p>
+                </div>
+                
+                <div className="space-y-4">
+                  {distributionData.map((item, index) => (
+                    <div key={item.type} className="p-4 bg-slate-700/50 rounded-lg border border-slate-600">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center space-x-3">
+                          <div className={`w-4 h-4 rounded-full ${
+                            item.color === 'blue' ? 'bg-blue-500' :
+                            item.color === 'emerald' ? 'bg-emerald-500' :
+                            'bg-orange-500'
+                          }`}></div>
+                          <h4 className="font-semibold text-white">{item.type}</h4>
+                        </div>
+                        <span className="text-lg font-bold text-white">{item.percentage}%</span>
+                      </div>
+                      
+                      <div className="w-full h-3 bg-slate-600 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${item.percentage}%` }}
+                          transition={{ duration: 1, delay: index * 0.2 }}
+                          className={`h-full rounded-full ${
+                            item.color === 'blue' ? 'bg-blue-500' :
+                            item.color === 'emerald' ? 'bg-emerald-500' :
+                            'bg-orange-500'
+                          }`}
+                        />
+                      </div>
+                      
+                      <div className="mt-3 text-sm text-slate-400">
+                        <p>Valor estimado: ${((totalValue * item.percentage) / 100).toFixed(2)}</p>
+                        <p>Activos en esta categoría: {Math.floor(assets.length * (item.percentage / 100))}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="flex justify-center">
+                  <Button 
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    onClick={() => setShowDistributionModal(false)}
+                  >
+                    Entendido
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Report Modal */}
+      <AnimatePresence>
+        {showReportModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowReportModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-8 max-w-lg w-full relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowReportModal(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              
+              <div className="space-y-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Download className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">Reporte de Portafolio</h3>
+                  <p className="text-slate-300">
+                    Descarga un reporte completo de tu portafolio en formato PDF.
+                  </p>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-3 bg-slate-700/50 rounded-lg text-center">
+                      <p className="text-xs text-slate-400">Valor Total</p>
+                      <p className="font-semibold text-white">${reportData.totalValue.toFixed(2)}</p>
+                    </div>
+                    <div className="p-3 bg-slate-700/50 rounded-lg text-center">
+                      <p className="text-xs text-slate-400">Cambio 24h</p>
+                      <p className={`font-semibold ${reportData.totalChange >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {reportData.totalChange >= 0 ? '+' : ''}{reportData.totalChange.toFixed(2)}%
+                      </p>
+                    </div>
+                    <div className="p-3 bg-slate-700/50 rounded-lg text-center">
+                      <p className="text-xs text-slate-400">Activos</p>
+                      <p className="font-semibold text-white">{reportData.totalAssets}</p>
+                    </div>
+                    <div className="p-3 bg-slate-700/50 rounded-lg text-center">
+                      <p className="text-xs text-slate-400">Tokens</p>
+                      <p className="font-semibold text-white">{reportData.totalTokens.toFixed(4)}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="text-xs text-slate-400 text-center">
+                    Generado el: {reportData.generatedAt}
+                  </div>
+                </div>
+                
+                <div className="flex space-x-3">
+                  <Button 
+                    variant="outline" 
+                    className="flex-1 border-slate-600 text-slate-300"
+                    onClick={() => setShowReportModal(false)}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button 
+                    className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
+                    onClick={() => {
+                      // Aquí se implementaría la descarga real
+                      console.log('Descargando reporte...');
+                      setShowReportModal(false);
+                    }}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Descargar PDF
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* RWA Info Modal */}
+      <AnimatePresence>
+        {showRwaInfoModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowRwaInfoModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-8 max-w-2xl w-full relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowRwaInfoModal(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              
+              <div className="space-y-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Globe className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">¿Qué son los RWA?</h3>
+                  <p className="text-slate-300">
+                    Los Real World Assets (RWA) son activos del mundo real tokenizados en blockchain.
+                  </p>
+                </div>
+                
+                <div className="space-y-4">
+                  {rwaInfo.map((info) => (
+                    <div key={info.id} className={`p-4 rounded-lg border ${getBgColorClass(info.color)}`}>
+                      <div className="flex items-start space-x-3">
+                        <div className={`${getColorClass(info.color)}`}>
+                          {info.icon}
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-slate-900 dark:text-white mb-2">{info.title}</h4>
+                          <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
+                            {info.description}
+                          </p>
+                          <div className="text-xs text-slate-500 dark:text-slate-500">
+                            Beneficios adicionales incluyen liquidez 24/7, transparencia total y acceso global.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="flex space-x-3">
+                  <Button 
+                    variant="outline" 
+                    className="flex-1 border-slate-600 text-slate-300"
+                    onClick={() => setShowRwaInfoModal(false)}
+                  >
+                    Cerrar
+                  </Button>
+                  <Button 
+                    className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                    onClick={() => navigate('/education')}
+                  >
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Aprender Más
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }; 
