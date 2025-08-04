@@ -1,4 +1,3 @@
-import React from 'react';
 import { SWRConfig } from 'swr';
 import { RouterProvider } from 'react-router-dom';
 import { AppRouter } from '@/router';

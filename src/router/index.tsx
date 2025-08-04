@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { Layout } from '@components/shared/Layout';
 import { Dashboard } from '@/pages/Dashboard';
 import { Portfolio } from '@/pages/Portfolio';
-import { Earnings } from '@/pages/Earnings';
+import { EarningsPage } from '@/pages/Earnings';
 import { Savings } from '@/pages/Savings';
 import { Investments } from '@/pages/Investments';
 import { RwaTokens } from '@/pages/RwaTokens';
@@ -39,7 +39,7 @@ export const AppRouter = createBrowserRouter([
       },
       {
         path: 'earnings',
-        element: <Earnings />
+        element: <EarningsPage />
       },
       {
         path: 'savings',

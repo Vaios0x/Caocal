@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, Calendar, Activity, BarChart3, LineChart, PieChart } from 'lucide-react';
+import { TrendingUp, Calendar, BarChart3, LineChart, PieChart } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { portfolioGrowthData } from '../../data/mockData.js';

@@ -1,55 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   TrendingUp, 
   Calendar, 
   DollarSign, 
   BarChart3, 
-  AlertTriangle, 
   Clock, 
   Target, 
-  Star, 
   Shield, 
   Globe, 
-  Building2, 
-  Home, 
-  Car, 
-  Plane, 
-  Gift, 
-  Heart, 
-  Zap, 
   Activity, 
   LineChart, 
   ArrowRight, 
-  Settings, 
   Download, 
-  Share2, 
   Eye, 
   EyeOff,
-  Info,
-  AlertCircle,
-  CheckCircle,
-  Plus,
-  Minus,
-  RefreshCw,
-  Filter,
-  SortAsc,
-  SortDesc,
-  TrendingDown,
-  PieChart,
-  Users,
-  Briefcase,
-  Smartphone,
-  Monitor,
-  Wifi,
-  MapPin
+  Filter
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
 import { useUserData } from '@/hooks/useUserData.js';
 import type { Earnings } from '@/data/mockData.js';
 
-export const Earnings: React.FC = () => {
+export const EarningsPage: React.FC = () => {
   const { earnings, isLoading, error } = useUserData();
   const [showSensitiveData, setShowSensitiveData] = useState(false);
   const [selectedTimeframe, setSelectedTimeframe] = useState<'7d' | '14d' | '30d' | '90d'>('30d');
@@ -57,13 +30,15 @@ export const Earnings: React.FC = () => {
   const [viewMode, setViewMode] = useState<'chart' | 'list' | 'calendar'>('chart');
   const [selectedEarning, setSelectedEarning] = useState<string | null>(null);
 
-  // Calcular estadísticas dinámicas
-  const earningsData = Array.isArray(earnings) ? earnings : [];
+  // Filtrar solo los datos de Earnings (excluir Notifications)
+  const earningsData = Array.isArray(earnings) 
+    ? earnings.filter((item): item is Earnings => 'amount' in item && 'platform' in item)
+    : [];
   
   const totalEarnings = earningsData.reduce((sum: number, earning: Earnings) => sum + earning.amount, 0);
   const averageEarnings = totalEarnings / (earningsData.length || 1);
-  const maxEarnings = Math.max(...(earningsData.map((e: Earnings) => e.amount) || [0]));
-  const minEarnings = Math.min(...(earningsData.map((e: Earnings) => e.amount) || [0]));
+  const maxEarnings = Math.max(...earningsData.map((e: Earnings) => e.amount));
+  const minEarnings = Math.min(...earningsData.map((e: Earnings) => e.amount));
   const volatility = ((maxEarnings - minEarnings) / averageEarnings) * 100;
 
   // Simular datos de rendimiento por período

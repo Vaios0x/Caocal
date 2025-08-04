@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Target, TrendingUp, Settings, Calendar, Sparkles, DollarSign, Clock, AlertCircle, CheckCircle, Info } from 'lucide-react';
+import { Target, TrendingUp, Settings, Calendar, Clock, AlertCircle, CheckCircle, Info } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
-import { Progress } from '../ui/Progress';
 import { Button } from '../ui/Button';
 import { useSavingsRate } from '../../hooks/useUserData.js';
 

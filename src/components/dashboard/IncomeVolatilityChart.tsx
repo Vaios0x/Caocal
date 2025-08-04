@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { TrendingUp, TrendingDown, BarChart3, AlertTriangle, Info, Calendar, DollarSign, Activity } from 'lucide-react';
+import { TrendingUp, TrendingDown, BarChart3, AlertTriangle, DollarSign } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
 import { useUserData } from '@/hooks/useUserData.js';
@@ -11,14 +11,16 @@ export const IncomeVolatilityChart: React.FC = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<'7d' | '14d' | '30d'>('7d');
   const [hoveredBar, setHoveredBar] = useState<string | null>(null);
 
-  // Asegurar que earnings sea del tipo correcto
-  const earningsData = Array.isArray(earnings) ? earnings : [];
+  // Filtrar solo los datos de Earnings (excluir Notifications)
+  const earningsData = Array.isArray(earnings) 
+    ? earnings.filter((item): item is Earnings => 'amount' in item && 'platform' in item)
+    : [];
 
   // Calcular estadísticas
   const totalEarnings = earningsData.reduce((sum: number, earning: Earnings) => sum + earning.amount, 0);
   const averageEarnings = totalEarnings / (earningsData.length || 1);
-  const maxEarnings = Math.max(...(earningsData.map((e: Earnings) => e.amount) || [0]));
-  const minEarnings = Math.min(...(earningsData.map((e: Earnings) => e.amount) || [0]));
+  const maxEarnings = Math.max(...earningsData.map((e: Earnings) => e.amount));
+  const minEarnings = Math.min(...earningsData.map((e: Earnings) => e.amount));
   const volatility = ((maxEarnings - minEarnings) / averageEarnings) * 100;
 
   // Obtener datos según el período seleccionado
@@ -233,7 +235,7 @@ export const IncomeVolatilityChart: React.FC = () => {
                   ? 'bg-orange-600 text-white'
                   : 'bg-emerald-600 text-white'
               }`}>
-                <Info className="w-4 h-4" />
+                <AlertTriangle className="w-4 h-4" />
               </div>
               <div className="flex-1">
                 <p className="text-sm font-medium text-slate-900 dark:text-white">

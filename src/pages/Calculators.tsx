@@ -2,47 +2,20 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Calculator,
-  DollarSign,
   TrendingUp,
   Target,
   Shield,
   BarChart3,
   PieChart,
-  Clock,
   Calendar,
-  Percent,
   ArrowRight,
-  ArrowLeft,
   RefreshCw,
   Download,
   Share2,
-  Bookmark,
-  Info,
-  AlertCircle,
-  CheckCircle,
-  Zap,
-  Building2,
-  Home,
-  Car,
-  GraduationCap,
-  Heart,
-  Plane,
-  Gift,
-  Star,
-  Users,
   CreditCard,
-  PiggyBank,
-  Wallet,
-  Banknote,
-  Coins,
-  TrendingDown,
   Activity,
-  LineChart,
-  Scissors,
-  Plus,
-  Minus,
-  X,
-  Settings
+  Users,
+  CheckCircle
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
@@ -175,7 +148,7 @@ export const Calculators: React.FC = () => {
   });
 
   // Funciones de cálculo
-  const calculateCompoundInterest = () => {
+  const calculateCompoundInterest = (): CalculationResult[] => {
     const { principal, rate, time, frequency } = compoundInterest;
     const r = rate / 100;
     const n = frequency;
@@ -191,7 +164,7 @@ export const Calculators: React.FC = () => {
     ];
   };
 
-  const calculateLoan = () => {
+  const calculateLoan = (): CalculationResult[] => {
     const { amount, rate, term } = loanCalculator;
     const monthlyRate = rate / 100 / 12;
     const monthlyPayment = amount * (monthlyRate * Math.pow(1 + monthlyRate, term)) / (Math.pow(1 + monthlyRate, term) - 1);

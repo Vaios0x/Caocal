@@ -2,11 +2,8 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Building2, 
-  Home, 
   Car, 
-  Plane, 
   Ship, 
-  Factory, 
   Warehouse,
   BarChart3,
   TrendingUp,
@@ -16,28 +13,19 @@ import {
   Coins,
   ArrowUpRight,
   ArrowDownRight,
-  Calendar,
   DollarSign,
   PieChart,
   LineChart,
-  Settings,
   Info,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
   Star,
   MapPin,
   Users,
   Award,
   Lock,
   Eye,
-  EyeOff,
   Filter,
   Search,
-  Download,
-  Share2,
-  Bookmark,
-  Heart
+  Bookmark
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
