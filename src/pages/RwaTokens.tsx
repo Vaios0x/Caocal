@@ -25,7 +25,16 @@ import {
   Eye,
   Filter,
   Search,
-  Bookmark
+  Bookmark,
+  X,
+  Download,
+  Share2,
+  Settings,
+  Plus,
+  CheckCircle,
+  Target,
+  Activity,
+  FileText
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
@@ -71,6 +80,22 @@ export const RwaTokens: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'tokens' | 'categories' | 'analytics'>('overview');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  
+  // Estados para modales
+  const [showTokenDetailsModal, setShowTokenDetailsModal] = useState(false);
+  const [showCategoryDetailsModal, setShowCategoryDetailsModal] = useState(false);
+  const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showCreateTokenModal, setShowCreateTokenModal] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showPortfolioModal, setShowPortfolioModal] = useState(false);
+  
+  // Estados para datos seleccionados
+  const [selectedToken, setSelectedToken] = useState<RwaToken | null>(null);
+  const [selectedCategoryData, setSelectedCategoryData] = useState<TokenCategory | null>(null);
+  const [filterRisk, setFilterRisk] = useState<string>('all');
+  const [filterStatus, setFilterStatus] = useState<string>('all');
 
   // Datos simulados de RWA Tokens
   const rwaTokens: RwaToken[] = [
@@ -276,6 +301,69 @@ export const RwaTokens: React.FC = () => {
     }
   };
 
+  // Funciones de manejo
+  const handleTokenClick = (token: RwaToken) => {
+    setSelectedToken(token);
+    setShowTokenDetailsModal(true);
+  };
+
+  const handleCategoryClick = (category: TokenCategory) => {
+    setSelectedCategoryData(category);
+    setShowCategoryDetailsModal(true);
+  };
+
+  const handleAnalyticsClick = () => {
+    setShowAnalyticsModal(true);
+  };
+
+  const handleDownloadReport = () => {
+    setShowReportModal(true);
+  };
+
+  const handleSettingsClick = () => {
+    setShowSettingsModal(true);
+  };
+
+  const handleCreateToken = () => {
+    setShowCreateTokenModal(true);
+  };
+
+  const handleInfoClick = () => {
+    setShowInfoModal(true);
+  };
+
+  const handleBookmarkToken = (tokenId: string) => {
+    // Simular bookmark
+    console.log(`Token ${tokenId} agregado a favoritos`);
+  };
+
+  const getTailwindColor = (tailwindClass: string) => {
+    const colorMap: { [key: string]: string } = {
+      'text-blue-500': '#3b82f6',
+      'text-emerald-500': '#10b981',
+      'text-purple-500': '#8b5cf6',
+      'text-orange-500': '#f97316',
+      'text-yellow-500': '#eab308',
+      'text-red-500': '#ef4444',
+      'text-green-500': '#22c55e',
+      'text-indigo-500': '#6366f1',
+      'text-pink-500': '#ec4899',
+      'text-cyan-500': '#06b6d4',
+      'text-teal-500': '#14b8a6',
+      'text-lime-500': '#84cc16',
+      'text-amber-500': '#f59e0b',
+      'text-violet-500': '#8b5cf6',
+      'text-fuchsia-500': '#d946ef',
+      'text-rose-500': '#f43f5e',
+      'text-slate-500': '#64748b',
+      'text-gray-500': '#6b7280',
+      'text-zinc-500': '#71717a',
+      'text-neutral-500': '#737373',
+      'text-stone-500': '#78716c'
+    };
+    return colorMap[tailwindClass] || '#6b7280';
+  };
+
   return (
     <div className="space-y-8 lg:space-y-12">
       {/* Header de la página */}
@@ -438,7 +526,7 @@ export const RwaTokens: React.FC = () => {
                           <path
                             key={category.id}
                             d={`M 50 50 L ${x1} ${y1} A 40 40 0 ${largeArcFlag} 1 ${x2} ${y2} Z`}
-                            fill={category.color.replace('text-', '')}
+                            fill={getTailwindColor(category.color)}
                             className="transition-all duration-300 hover:opacity-80"
                           />
                         );
@@ -454,7 +542,10 @@ export const RwaTokens: React.FC = () => {
                       key={category.id}
                       className="flex items-center space-x-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
                     >
-                      <div className={`w-4 h-4 rounded-full ${category.color.replace('text-', 'bg-')}`}></div>
+                      <div 
+                        className="w-4 h-4 rounded-full"
+                        style={{ backgroundColor: getTailwindColor(category.color) }}
+                      ></div>
                       <div className="flex-1">
                         <p className="text-sm font-medium text-slate-900 dark:text-white">{category.name}</p>
                         <p className="text-xs text-slate-600 dark:text-slate-400">
@@ -506,13 +597,29 @@ export const RwaTokens: React.FC = () => {
               </Button>
             </div>
             <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleSettingsClick}
+              >
                 <Filter className="w-4 h-4 mr-2" />
                 Filtros
               </Button>
-              <Button variant="outline" size="sm">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => console.log('Búsqueda limpiada')}
+              >
                 <Search className="w-4 h-4 mr-2" />
                 Buscar
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleCreateToken}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Nuevo Token
               </Button>
             </div>
           </div>
@@ -578,11 +685,19 @@ export const RwaTokens: React.FC = () => {
                       </div>
 
                       <div className="flex items-center space-x-2 pt-4">
-                        <Button className="flex-1" size="sm">
+                        <Button 
+                          className="flex-1" 
+                          size="sm"
+                          onClick={() => handleTokenClick(token)}
+                        >
                           <Eye className="w-4 h-4 mr-2" />
                           Ver Detalles
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleBookmarkToken(token.id)}
+                        >
                           <Bookmark className="w-4 h-4" />
                         </Button>
                       </div>
@@ -646,11 +761,18 @@ export const RwaTokens: React.FC = () => {
                         </span>
 
                         <div className="flex items-center space-x-2">
-                          <Button size="sm">
+                          <Button 
+                            size="sm"
+                            onClick={() => handleTokenClick(token)}
+                          >
                             <Eye className="w-4 h-4 mr-2" />
                             Ver
                           </Button>
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleBookmarkToken(token.id)}
+                          >
                             <Bookmark className="w-4 h-4" />
                           </Button>
                         </div>
@@ -722,6 +844,7 @@ export const RwaTokens: React.FC = () => {
                   <Button 
                     className="w-full mt-4"
                     variant={selectedCategory === category.id ? "default" : "outline"}
+                    onClick={() => handleCategoryClick(category)}
                   >
                     {selectedCategory === category.id ? 'Categoría Seleccionada' : 'Explorar Categoría'}
                   </Button>
@@ -731,7 +854,7 @@ export const RwaTokens: React.FC = () => {
           </div>
 
           {/* Información adicional */}
-          <Card className="card-hover">
+          <Card className="card-hover cursor-pointer" onClick={handleInfoClick}>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Info className="w-5 h-5 text-primary" />
@@ -795,7 +918,7 @@ export const RwaTokens: React.FC = () => {
         >
           {/* Métricas de rendimiento */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="card-hover">
+            <Card className="card-hover cursor-pointer" onClick={handleAnalyticsClick}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -811,7 +934,7 @@ export const RwaTokens: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className="card-hover">
+            <Card className="card-hover cursor-pointer" onClick={handleAnalyticsClick}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -827,7 +950,7 @@ export const RwaTokens: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className="card-hover">
+            <Card className="card-hover cursor-pointer" onClick={handleAnalyticsClick}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -875,9 +998,746 @@ export const RwaTokens: React.FC = () => {
                   </div>
                 ))}
               </div>
+              
+              <div className="flex items-center justify-center pt-4">
+                <Button onClick={handleDownloadReport}>
+                  <Download className="w-4 h-4 mr-2" />
+                  Descargar Reporte Completo
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </motion.div>
+      )}
+
+      {/* Modales */}
+      
+      {/* Token Details Modal */}
+      {showTokenDetailsModal && selectedToken && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${selectedToken.color.replace('text-', 'bg-')} bg-opacity-10 border border-current border-opacity-20`}>
+                    {selectedToken.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">{selectedToken.name}</h3>
+                    <p className="text-slate-600 dark:text-slate-400">{selectedToken.symbol} • {selectedToken.category}</p>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowTokenDetailsModal(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Valor Total</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-white">
+                    ${(selectedToken.value / 1000000).toFixed(1)}M
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Yield Anual</p>
+                  <p className="text-2xl font-bold text-emerald-600">{selectedToken.yield}%</p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Market Cap</p>
+                  <p className="text-lg font-medium text-slate-900 dark:text-white">
+                    ${(selectedToken.marketCap / 1000000).toFixed(1)}M
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Volumen 24h</p>
+                  <p className="text-lg font-medium text-slate-900 dark:text-white">
+                    ${(selectedToken.volume24h / 1000000).toFixed(1)}M
+                  </p>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600 dark:text-slate-400">Riesgo</span>
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getRiskColor(selectedToken.risk)}`}>
+                    {getRiskLabel(selectedToken.risk)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600 dark:text-slate-400">Estado</span>
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(selectedToken.status)}`}>
+                    {getStatusLabel(selectedToken.status)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600 dark:text-slate-400">Inversión Mínima</span>
+                  <span className="font-medium">${selectedToken.minInvestment.toLocaleString()}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600 dark:text-slate-400">Vencimiento</span>
+                  <span className="font-medium">{selectedToken.maturity}</span>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2 text-sm">
+                  <MapPin className="w-4 h-4 text-slate-400" />
+                  <span className="text-slate-600 dark:text-slate-400">{selectedToken.location}</span>
+                </div>
+                <div className="flex items-center space-x-2 text-sm">
+                  <Users className="w-4 h-4 text-slate-400" />
+                  <span className="text-slate-600 dark:text-slate-400">{selectedToken.holders} holders</span>
+                </div>
+              </div>
+              
+              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                {selectedToken.description}
+              </p>
+              
+              <div className="flex items-center space-x-3 pt-4">
+                <Button className="flex-1">
+                  <DollarSign className="w-4 h-4 mr-2" />
+                  Invertir Ahora
+                </Button>
+                <Button variant="outline">
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Compartir
+                </Button>
+                <Button variant="outline">
+                  <Bookmark className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Category Details Modal */}
+      {showCategoryDetailsModal && selectedCategoryData && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${selectedCategoryData.color.replace('text-', 'bg-')} bg-opacity-10 border border-current border-opacity-20`}>
+                    {selectedCategoryData.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">{selectedCategoryData.name}</h3>
+                    <p className="text-slate-600 dark:text-slate-400">{selectedCategoryData.description}</p>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowCategoryDetailsModal(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Valor Total</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-white">
+                    ${(selectedCategoryData.totalValue / 1000000).toFixed(1)}M
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Yield Promedio</p>
+                  <p className="text-2xl font-bold text-emerald-600">{selectedCategoryData.avgYield}%</p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Tokens Activos</p>
+                  <p className="text-lg font-medium text-slate-900 dark:text-white">{selectedCategoryData.tokenCount}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Volumen 24h</p>
+                  <p className="text-lg font-medium text-slate-900 dark:text-white">
+                    ${(selectedCategoryData.totalValue * 0.05 / 1000000).toFixed(1)}M
+                  </p>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <h4 className="font-medium text-slate-900 dark:text-white">Tokens en esta categoría:</h4>
+                <div className="space-y-3">
+                  {rwaTokens
+                    .filter(token => token.category === selectedCategoryData.name)
+                    .map(token => (
+                      <div key={token.id} className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800">
+                        <div className="flex items-center space-x-3">
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${token.color.replace('text-', 'bg-')} bg-opacity-10 border border-current border-opacity-20`}>
+                            {token.icon}
+                          </div>
+                          <div>
+                            <p className="font-medium text-slate-900 dark:text-white">{token.name}</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400">{token.symbol}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-medium text-slate-900 dark:text-white">
+                            ${(token.value / 1000000).toFixed(1)}M
+                          </p>
+                          <p className="text-sm text-emerald-600">{token.yield}% yield</p>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3 pt-4">
+                <Button className="flex-1">
+                  <Eye className="w-4 h-4 mr-2" />
+                  Ver Todos los Tokens
+                </Button>
+                <Button variant="outline">
+                  <Download className="w-4 h-4 mr-2" />
+                  Descargar Reporte
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Analytics Modal */}
+      {showAnalyticsModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <LineChart className="w-6 h-6 text-primary" />
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">Análisis Detallado</h3>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowAnalyticsModal(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">Rendimiento Total</p>
+                        <p className="text-2xl font-bold text-slate-900 dark:text-white">+12.5%</p>
+                      </div>
+                      <TrendingUp className="w-8 h-8 text-emerald-500" />
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">Volatilidad</p>
+                        <p className="text-2xl font-bold text-slate-900 dark:text-white">8.2%</p>
+                      </div>
+                      <Activity className="w-8 h-8 text-blue-500" />
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">Sharpe Ratio</p>
+                        <p className="text-2xl font-bold text-slate-900 dark:text-white">1.8</p>
+                      </div>
+                      <Target className="w-8 h-8 text-purple-500" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>Análisis de Riesgo por Categoría</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {categories.map(category => (
+                      <div key={category.id} className="flex items-center justify-between p-4 rounded-lg bg-slate-50 dark:bg-slate-800">
+                        <div className="flex items-center space-x-3">
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${category.color.replace('text-', 'bg-')} bg-opacity-10 border border-current border-opacity-20`}>
+                            {category.icon}
+                          </div>
+                          <div>
+                            <p className="font-medium text-slate-900 dark:text-white">{category.name}</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400">{category.avgYield}% yield promedio</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-medium text-slate-900 dark:text-white">
+                            ${(category.totalValue / 1000000).toFixed(1)}M
+                          </p>
+                          <p className="text-sm text-slate-600 dark:text-slate-400">{category.tokenCount} tokens</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <div className="flex items-center space-x-3 pt-4">
+                <Button className="flex-1">
+                  <Download className="w-4 h-4 mr-2" />
+                  Descargar Análisis
+                </Button>
+                <Button variant="outline">
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Compartir
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Report Modal */}
+      {showReportModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <Download className="w-6 h-6 text-primary" />
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">Descargar Reporte</h3>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowReportModal(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800">
+                  <div className="flex items-center space-x-3">
+                    <FileText className="w-5 h-5 text-blue-500" />
+                    <div>
+                      <p className="font-medium text-slate-900 dark:text-white">Reporte Mensual</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">PDF • 2.3 MB</p>
+                    </div>
+                  </div>
+                  <Button size="sm">
+                    <Download className="w-4 h-4" />
+                  </Button>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800">
+                  <div className="flex items-center space-x-3">
+                    <BarChart3 className="w-5 h-5 text-emerald-500" />
+                    <div>
+                      <p className="font-medium text-slate-900 dark:text-white">Análisis de Rendimiento</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">Excel • 1.8 MB</p>
+                    </div>
+                  </div>
+                  <Button size="sm">
+                    <Download className="w-4 h-4" />
+                  </Button>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800">
+                  <div className="flex items-center space-x-3">
+                    <PieChart className="w-5 h-5 text-purple-500" />
+                    <div>
+                      <p className="font-medium text-slate-900 dark:text-white">Distribución de Activos</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">PDF • 1.5 MB</p>
+                    </div>
+                  </div>
+                  <Button size="sm">
+                    <Download className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3 pt-4">
+                <Button className="flex-1">
+                  <Download className="w-4 h-4 mr-2" />
+                  Descargar Todo
+                </Button>
+                <Button variant="outline">
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Compartir
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Settings Modal */}
+      {showSettingsModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <Settings className="w-6 h-6 text-primary" />
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">Configuración de Filtros</h3>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowSettingsModal(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Nivel de Riesgo
+                  </label>
+                  <div className="space-y-2">
+                    {['all', 'low', 'medium', 'high'].map(risk => (
+                      <label key={risk} className="flex items-center space-x-3">
+                        <input
+                          type="radio"
+                          name="risk"
+                          value={risk}
+                          checked={filterRisk === risk}
+                          onChange={(e) => setFilterRisk(e.target.value)}
+                          className="text-primary focus:ring-primary"
+                        />
+                        <span className="text-sm text-slate-700 dark:text-slate-300">
+                          {risk === 'all' ? 'Todos' : getRiskLabel(risk)}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Estado del Token
+                  </label>
+                  <div className="space-y-2">
+                    {['all', 'active', 'coming-soon', 'closed'].map(status => (
+                      <label key={status} className="flex items-center space-x-3">
+                        <input
+                          type="radio"
+                          name="status"
+                          value={status}
+                          checked={filterStatus === status}
+                          onChange={(e) => setFilterStatus(e.target.value)}
+                          className="text-primary focus:ring-primary"
+                        />
+                        <span className="text-sm text-slate-700 dark:text-slate-300">
+                          {status === 'all' ? 'Todos' : getStatusLabel(status)}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3 pt-4">
+                <Button className="flex-1">
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Aplicar Filtros
+                </Button>
+                <Button variant="outline">
+                  <X className="w-4 h-4 mr-2" />
+                  Limpiar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Create Token Modal */}
+      {showCreateTokenModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <Plus className="w-6 h-6 text-primary" />
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">Crear Nuevo Token</h3>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowCreateTokenModal(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Nombre del Token
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                    placeholder="Ej: Torre Corporativa CDMX"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Símbolo
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                    placeholder="Ej: TCDMX"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Categoría
+                  </label>
+                  <select className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white">
+                    <option value="">Seleccionar categoría</option>
+                    {categories.map(category => (
+                      <option key={category.id} value={category.id}>{category.name}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Valor Inicial
+                  </label>
+                  <input
+                    type="number"
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                    placeholder="Ej: 1000000"
+                  />
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3 pt-4">
+                <Button className="flex-1">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Crear Token
+                </Button>
+                <Button variant="outline">
+                  <X className="w-4 h-4 mr-2" />
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Info Modal */}
+      {showInfoModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <Info className="w-6 h-6 text-primary" />
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">Información sobre RWA Tokens</h3>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowInfoModal(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-4">
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <Lock className="w-5 h-5 text-emerald-500 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-slate-900 dark:text-white">Seguridad Regulatoria</h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      Todos los tokens cumplen con regulaciones financieras y están respaldados por activos reales verificados.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-3">
+                  <Shield className="w-5 h-5 text-blue-500 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-slate-900 dark:text-white">Custodia Segura</h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      Los activos físicos están custodiados por instituciones financieras autorizadas y reguladas.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-3">
+                  <Globe className="w-5 h-5 text-purple-500 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-slate-900 dark:text-white">Liquidez Global</h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      Acceso a mercados globales con liquidez 24/7 a través de tecnología blockchain.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-3">
+                  <Award className="w-5 h-5 text-orange-500 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-slate-900 dark:text-white">Transparencia Total</h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      Toda la información de los activos está disponible públicamente en la blockchain.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3 pt-4">
+                <Button className="flex-1">
+                  <Info className="w-4 h-4 mr-2" />
+                  Más Información
+                </Button>
+                <Button variant="outline">
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Compartir
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Portfolio Modal */}
+      {showPortfolioModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <PieChart className="w-6 h-6 text-primary" />
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">Portfolio de RWA Tokens</h3>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowPortfolioModal(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">Valor Total</p>
+                        <p className="text-xl font-bold text-slate-900 dark:text-white">
+                          ${(totalValue / 1000000).toFixed(1)}M
+                        </p>
+                      </div>
+                      <DollarSign className="w-6 h-6 text-emerald-500" />
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">Tokens Activos</p>
+                        <p className="text-xl font-bold text-slate-900 dark:text-white">{rwaTokens.length}</p>
+                      </div>
+                      <Coins className="w-6 h-6 text-blue-500" />
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">Yield Promedio</p>
+                        <p className="text-xl font-bold text-slate-900 dark:text-white">{totalYield.toFixed(1)}%</p>
+                      </div>
+                      <Star className="w-6 h-6 text-yellow-500" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>Distribución del Portfolio</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {rwaTokens.map(token => (
+                      <div key={token.id} className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800">
+                        <div className="flex items-center space-x-3">
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${token.color.replace('text-', 'bg-')} bg-opacity-10 border border-current border-opacity-20`}>
+                            {token.icon}
+                          </div>
+                          <div>
+                            <p className="font-medium text-slate-900 dark:text-white">{token.name}</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400">{token.symbol}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-medium text-slate-900 dark:text-white">
+                            ${(token.value / 1000000).toFixed(1)}M
+                          </p>
+                          <p className="text-sm text-emerald-600">{token.yield}% yield</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <div className="flex items-center space-x-3 pt-4">
+                <Button className="flex-1">
+                  <Download className="w-4 h-4 mr-2" />
+                  Descargar Portfolio
+                </Button>
+                <Button variant="outline">
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Compartir
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -2,38 +2,32 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { 
-  TrendingUp, 
-  BarChart3, 
-  Target, 
-  Shield, 
-  Zap, 
   Building2, 
-  Coins,
-  ArrowUpRight,
-  ArrowDownRight,
-  DollarSign,
-  PieChart,
-  LineChart,
-  Settings,
-  Info,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  Star,
-  X,
-  Eye,
-  Edit,
-  Share2,
-  Download,
-  Plus,
-  Play,
-  Pause,
-  RefreshCw,
-  ArrowRight,
+  Coins, 
+  ArrowUpRight, 
+  ArrowDownRight, 
+  PieChart, 
+  LineChart, 
+  AlertTriangle, 
+  X, 
+  Eye, 
   Bookmark,
-  Calendar,
-  Users,
-  TrendingDown
+  TrendingUp,
+  Shield,
+  Download,
+  Settings,
+  CheckCircle,
+  Info,
+  Clock,
+  Plus,
+  Share2,
+  Edit,
+  Target,
+  ArrowRight,
+  Star,
+  Zap,
+  BarChart3,
+  DollarSign
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
@@ -212,6 +206,34 @@ export const Investments: React.FC = () => {
     }
   };
 
+  // Función para convertir clases de Tailwind a colores hexadecimales
+  const getTailwindColor = (tailwindClass: string) => {
+    const colorMap: { [key: string]: string } = {
+      'text-blue-500': '#3b82f6',
+      'text-emerald-500': '#10b981',
+      'text-purple-500': '#8b5cf6',
+      'text-orange-500': '#f97316',
+      'text-yellow-500': '#eab308',
+      'text-red-500': '#ef4444',
+      'text-green-500': '#22c55e',
+      'text-indigo-500': '#6366f1',
+      'text-pink-500': '#ec4899',
+      'text-cyan-500': '#06b6d4',
+      'text-teal-500': '#14b8a6',
+      'text-lime-500': '#84cc16',
+      'text-amber-500': '#f59e0b',
+      'text-violet-500': '#8b5cf6',
+      'text-fuchsia-500': '#d946ef',
+      'text-rose-500': '#f43f5e',
+      'text-slate-500': '#64748b',
+      'text-gray-500': '#6b7280',
+      'text-zinc-500': '#71717a',
+      'text-neutral-500': '#737373',
+      'text-stone-500': '#78716c'
+    };
+    return colorMap[tailwindClass] || '#6b7280'; // color por defecto
+  };
+
   // Nuevas funciones de manejo
   const handleInvestmentClick = (investmentId: string) => {
     setShowInvestmentDetailsModal(investmentId);
@@ -241,11 +263,13 @@ export const Investments: React.FC = () => {
     setShowPortfolioModal(true);
   };
 
-  const handleEditInvestment = (investmentId: string) => {
+
+
+  const handleEditInvestment = () => {
     navigate('/settings');
   };
 
-  const handleShareInvestment = (investmentId: string) => {
+  const handleShareInvestment = () => {
     if (navigator.share) {
       navigator.share({
         title: 'Mi Inversión',
@@ -262,7 +286,7 @@ export const Investments: React.FC = () => {
     setShowReportModal(false);
   };
 
-  const handleApplyStrategy = (strategyId: string) => {
+  const handleApplyStrategy = () => {
     setShowStrategyDetailsModal(null);
     navigate('/portfolio');
   };
@@ -270,6 +294,10 @@ export const Investments: React.FC = () => {
   const handleBookmarkInvestment = (investmentId: string) => {
     console.log('Inversión marcada como favorita:', investmentId);
   };
+
+  const selectedInvestment = showInvestmentDetailsModal
+    ? investments.find(i => i.id === showInvestmentDetailsModal)
+    : null;
 
   return (
     <div className="space-y-8 lg:space-y-12">
@@ -438,7 +466,7 @@ export const Investments: React.FC = () => {
                           <path
                             key={investment.id}
                             d={`M 50 50 L ${x1} ${y1} A 40 40 0 ${largeArcFlag} 1 ${x2} ${y2} Z`}
-                            fill={investment.color.replace('text-', '')}
+                            fill={getTailwindColor(investment.color)}
                             className="transition-all duration-300 hover:opacity-80"
                           />
                         );
@@ -454,7 +482,10 @@ export const Investments: React.FC = () => {
                       key={investment.id}
                       className="flex items-center space-x-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
                     >
-                      <div className={`w-4 h-4 rounded-full ${investment.color.replace('text-', 'bg-')}`}></div>
+                      <div 
+                        className="w-4 h-4 rounded-full" 
+                        style={{ backgroundColor: getTailwindColor(investment.color) }}
+                      ></div>
                       <div className="flex-1">
                         <p className="text-sm font-medium text-slate-900 dark:text-white">{investment.name}</p>
                         <p className="text-xs text-slate-600 dark:text-slate-400">{investment.percentage}%</p>
@@ -724,7 +755,7 @@ export const Investments: React.FC = () => {
                           variant="ghost"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleShareInvestment(investment.id);
+                            handleShareInvestment();
                           }}
                         >
                           <Share2 className="w-4 h-4" />
@@ -733,7 +764,7 @@ export const Investments: React.FC = () => {
                           size="sm"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleEditInvestment(investment.id);
+                            handleEditInvestment();
                           }}
                         >
                           <Edit className="w-4 h-4 mr-2" />
@@ -794,11 +825,10 @@ export const Investments: React.FC = () => {
           </Card>
         </motion.div>
       )}
-    </div>
 
     {/* Modal de detalles de inversión */}
     <AnimatePresence>
-      {showInvestmentDetailsModal && (
+      {showInvestmentDetailsModal && selectedInvestment && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -825,69 +855,62 @@ export const Investments: React.FC = () => {
               </Button>
             </div>
             
-            {showInvestmentDetailsModal && (() => {
-              const investment = investments.find(i => i.id === showInvestmentDetailsModal);
-              if (!investment) return null;
-              
-              return (
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${investment.color.replace('text-', 'bg-')} bg-opacity-10 border border-current border-opacity-20`}>
-                      {investment.icon}
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-lg">{investment.name}</h4>
-                      <p className="text-sm text-muted-foreground">{investment.category}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="text-muted-foreground">Valor</span>
-                      <p className="font-medium">${investment.amount.toLocaleString()}</p>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Porcentaje</span>
-                      <p className="font-medium">{investment.percentage}%</p>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Cambio</span>
-                      <p className={`font-medium ${investment.change >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-                        {investment.change >= 0 ? '+' : ''}${investment.change.toFixed(2)}
-                      </p>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Riesgo</span>
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getRiskColor(investment.risk)}`}>
-                        {getRiskLabel(investment.risk)}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between pt-4">
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setShowInvestmentDetailsModal(null);
-                        handleEditInvestment(investment.id);
-                      }}
-                    >
-                      <Edit className="w-4 h-4 mr-2" />
-                      Editar
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setShowInvestmentDetailsModal(null);
-                        handleShareInvestment(investment.id);
-                      }}
-                    >
-                      <Share2 className="w-4 h-4 mr-2" />
-                      Compartir
-                    </Button>
-                  </div>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${selectedInvestment!.color.replace('text-', 'bg-')} bg-opacity-10 border border-current border-opacity-20`}>
+                  {selectedInvestment!.icon}
                 </div>
-              );
-            })()}
+                <div>
+                  <h4 className="font-bold text-lg">{selectedInvestment!.name}</h4>
+                  <p className="text-sm text-muted-foreground">{selectedInvestment!.category}</p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-muted-foreground">Valor</span>
+                  <p className="font-medium">${selectedInvestment!.amount.toLocaleString()}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Porcentaje</span>
+                  <p className="font-medium">{selectedInvestment!.percentage}%</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Cambio</span>
+                  <p className={`font-medium ${selectedInvestment!.change >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                    {selectedInvestment!.change >= 0 ? '+' : ''}${selectedInvestment!.change.toFixed(2)}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Riesgo</span>
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getRiskColor(selectedInvestment!.risk)}`}>
+                    {getRiskLabel(selectedInvestment!.risk)}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowInvestmentDetailsModal(null);
+                    handleEditInvestment();
+                  }}
+                >
+                  <Edit className="w-4 h-4 mr-2" />
+                  Editar
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowInvestmentDetailsModal(null);
+                    handleShareInvestment();
+                  }}
+                >
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Compartir
+                </Button>
+              </div>
+            </div>
           </motion.div>
         </motion.div>
       )}
@@ -984,7 +1007,7 @@ export const Investments: React.FC = () => {
                     </Button>
                     <Button
                       onClick={() => {
-                        handleApplyStrategy(strategy.id);
+                        handleApplyStrategy();
                       }}
                     >
                       <ArrowRight className="w-4 h-4 mr-2" />
@@ -1368,5 +1391,6 @@ export const Investments: React.FC = () => {
         </motion.div>
       )}
     </AnimatePresence>
+    </div>
   );
 }; 

@@ -1,50 +1,32 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  TrendingUp, 
-  Calendar, 
-  DollarSign, 
-  BarChart3, 
-  Clock, 
-  Target, 
-  Shield, 
-  Globe, 
   Activity, 
   LineChart, 
-  ArrowRight, 
-  Download, 
   Eye, 
-  EyeOff,
-  Filter,
-  X,
-  ExternalLink,
-  Share2,
+  EyeOff, 
+  Filter, 
+  X, 
+  PieChart,
+  TrendingUp,
+  DollarSign,
+  BarChart3,
+  Clock,
+  Target,
+  Shield,
+  Globe,
+  ArrowRight,
+  Download,
   Info,
-  AlertCircle,
-  CheckCircle,
-  Plus,
-  Minus,
-  Edit,
-  Trash2,
-  Star,
   BookOpen,
-  Calculator,
-  ChevronRight,
-  ChevronDown,
   ChevronUp,
-  Lock,
-  Zap,
-  Users,
-  Award,
-  Bell,
-  MessageCircle,
-  Settings,
-  PieChart
+  ChevronDown,
+  Calendar
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
 import { useUserData } from '@/hooks/useUserData.js';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import type { Earnings } from '@/data/mockData.js';
 
 export const EarningsPage: React.FC = () => {
@@ -145,9 +127,7 @@ export const EarningsPage: React.FC = () => {
     generatedAt: new Date().toLocaleString('es-MX')
   };
 
-  const handleEarningClick = (earningId: string) => {
-    setShowEarningModal(earningId);
-  };
+
 
   const handlePlatformClick = () => {
     setShowPlatformModal(true);
@@ -173,9 +153,7 @@ export const EarningsPage: React.FC = () => {
     }
   };
 
-  const handleViewStrategies = () => {
-    navigate('/education');
-  };
+
 
   const getColorClass = (color: string) => {
     switch (color) {

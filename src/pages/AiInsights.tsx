@@ -21,7 +21,16 @@ import {
   Activity,
   Cpu,
   Database,
-  Building2
+  Building2,
+  X,
+  Download,
+  Settings,
+  Plus,
+  Share2,
+  Edit,
+  Trash2,
+  CheckCircle,
+  Zap
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
@@ -75,9 +84,23 @@ interface AiModel {
 }
 
 export const AiInsights: React.FC = () => {
-  const [selectedRecommendation, setSelectedRecommendation] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'recommendations' | 'insights' | 'models'>('overview');
   const [filterType, setFilterType] = useState<string>('all');
+  
+  // Estados para modales
+  const [showRecommendationModal, setShowRecommendationModal] = useState(false);
+  const [showInsightModal, setShowInsightModal] = useState(false);
+  const [showModelModal, setShowModelModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showCreateRecommendationModal, setShowCreateRecommendationModal] = useState(false);
+  const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  
+  // Estados para datos seleccionados
+  const [selectedRecommendationData, setSelectedRecommendationData] = useState<AiRecommendation | null>(null);
+  const [selectedInsightData, setSelectedInsightData] = useState<AiInsight | null>(null);
+  const [selectedModelData, setSelectedModelData] = useState<AiModel | null>(null);
 
   // Datos simulados de recomendaciones de IA
   const recommendations: AiRecommendation[] = [
@@ -313,6 +336,58 @@ export const AiInsights: React.FC = () => {
     }
   };
 
+  // Funciones de manejo
+  const handleRecommendationClick = (recommendation: AiRecommendation) => {
+    setSelectedRecommendationData(recommendation);
+    setShowRecommendationModal(true);
+  };
+
+  const handleInsightClick = (insight: AiInsight) => {
+    setSelectedInsightData(insight);
+    setShowInsightModal(true);
+  };
+
+  const handleModelClick = (model: AiModel) => {
+    setSelectedModelData(model);
+    setShowModelModal(true);
+  };
+
+  const handleSettingsClick = () => {
+    setShowSettingsModal(true);
+  };
+
+  const handleCreateRecommendation = () => {
+    setShowCreateRecommendationModal(true);
+  };
+
+  const handleAnalyticsClick = () => {
+    setShowAnalyticsModal(true);
+  };
+
+  const handleDownloadReport = () => {
+    setShowReportModal(true);
+  };
+
+  const handleBookmarkRecommendation = (recommendation: AiRecommendation) => {
+    console.log('Recomendación marcada:', recommendation.title);
+  };
+
+  const handleApplyRecommendation = (recommendation: AiRecommendation) => {
+    console.log('Aplicando recomendación:', recommendation.title);
+  };
+
+  const handleShareRecommendation = (recommendation: AiRecommendation) => {
+    console.log('Compartiendo recomendación:', recommendation.title);
+  };
+
+  const handleEditRecommendation = (recommendation: AiRecommendation) => {
+    console.log('Editando recomendación:', recommendation.title);
+  };
+
+  const handleDeleteRecommendation = (recommendation: AiRecommendation) => {
+    console.log('Eliminando recomendación:', recommendation.title);
+  };
+
   const filteredRecommendations = filterType === 'all' 
     ? recommendations 
     : recommendations.filter(rec => rec.type === filterType);
@@ -379,7 +454,7 @@ export const AiInsights: React.FC = () => {
         >
           {/* Resumen de IA Insights */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card className="card-hover">
+            <Card className="card-hover cursor-pointer" onClick={() => setActiveTab('recommendations')}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -411,7 +486,7 @@ export const AiInsights: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className="card-hover">
+            <Card className="card-hover cursor-pointer" onClick={() => setActiveTab('models')}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -427,7 +502,7 @@ export const AiInsights: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className="card-hover">
+            <Card className="card-hover cursor-pointer" onClick={() => setActiveTab('insights')}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -447,10 +522,16 @@ export const AiInsights: React.FC = () => {
           {/* Gráfico de distribución por tipo */}
           <Card className="card-hover">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <PieChart className="w-5 h-5 text-primary" />
-                <span>Distribución de Recomendaciones</span>
-              </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center space-x-2">
+                  <PieChart className="w-5 h-5 text-primary" />
+                  <span>Distribución de Recomendaciones</span>
+                </CardTitle>
+                <Button variant="outline" size="sm" onClick={handleDownloadReport}>
+                  <Download className="w-4 h-4 mr-2" />
+                  Descargar Reporte
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
@@ -566,13 +647,17 @@ export const AiInsights: React.FC = () => {
               </Button>
             </div>
             <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={handleSettingsClick}>
                 <Filter className="w-4 h-4 mr-2" />
                 Filtros
               </Button>
               <Button variant="outline" size="sm">
                 <Search className="w-4 h-4 mr-2" />
                 Buscar
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleCreateRecommendation}>
+                <Plus className="w-4 h-4 mr-2" />
+                Nueva Recomendación
               </Button>
             </div>
           </div>
@@ -587,10 +672,8 @@ export const AiInsights: React.FC = () => {
                 transition={{ duration: 0.3, delay: index * 0.1 }}
               >
                 <div 
-                  className={`card-hover cursor-pointer transition-all duration-300 ${
-                    selectedRecommendation === recommendation.id ? 'ring-2 ring-purple-500' : ''
-                  }`} 
-                  onClick={() => setSelectedRecommendation(recommendation.id)}
+                  className="card-hover cursor-pointer transition-all duration-300"
+                  onClick={() => handleRecommendationClick(recommendation)}
                 >
                   <Card>
                   <CardHeader>
@@ -656,12 +739,15 @@ export const AiInsights: React.FC = () => {
                         ))}
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Button size="sm">
+                        <Button size="sm" onClick={() => handleRecommendationClick(recommendation)}>
                           <Eye className="w-4 h-4 mr-2" />
                           Ver Detalles
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" onClick={() => handleBookmarkRecommendation(recommendation)}>
                           <Bookmark className="w-4 h-4" />
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => handleApplyRecommendation(recommendation)}>
+                          <CheckCircle className="w-4 h-4" />
                         </Button>
                       </div>
                     </div>
@@ -733,7 +819,7 @@ export const AiInsights: React.FC = () => {
                         </div>
                       </div>
 
-                      <Button className="w-full mt-4" size="sm">
+                      <Button className="w-full mt-4" size="sm" onClick={() => handleInsightClick(insight)}>
                         <Eye className="w-4 h-4 mr-2" />
                         Ver Análisis Completo
                       </Button>
@@ -802,6 +888,7 @@ export const AiInsights: React.FC = () => {
                   <Button 
                     className="w-full mt-4"
                     variant="outline"
+                    onClick={() => handleModelClick(model)}
                   >
                     Ver Detalles del Modelo
                   </Button>
@@ -864,6 +951,598 @@ export const AiInsights: React.FC = () => {
             </CardContent>
           </Card>
         </motion.div>
+      )}
+
+      {/* Modales */}
+      
+      {/* Modal de Detalles de Recomendación */}
+      {showRecommendationModal && selectedRecommendationData && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Detalles de Recomendación
+                </h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowRecommendationModal(false)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="p-6 space-y-6">
+              <div className="flex items-start space-x-4">
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${selectedRecommendationData.color.replace('text-', 'bg-')} bg-opacity-10 border border-current border-opacity-20`}>
+                  {selectedRecommendationData.icon}
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                    {selectedRecommendationData.title}
+                  </h4>
+                  <p className="text-slate-600 dark:text-slate-400 mb-4">
+                    {selectedRecommendationData.description}
+                  </p>
+                  <div className="flex items-center space-x-4">
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getImpactColor(selectedRecommendationData.impact)}`}>
+                      {getImpactLabel(selectedRecommendationData.impact)}
+                    </span>
+                    <span className="text-sm text-slate-600 dark:text-slate-400">
+                      {selectedRecommendationData.confidence}% confianza
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h5 className="font-medium text-slate-900 dark:text-white mb-2">Acción Recomendada</h5>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">{selectedRecommendationData.action}</p>
+                </div>
+                <div>
+                  <h5 className="font-medium text-slate-900 dark:text-white mb-2">Timeframe</h5>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">{selectedRecommendationData.timeframe}</p>
+                </div>
+                {selectedRecommendationData.potentialReturn && (
+                  <div>
+                    <h5 className="font-medium text-slate-900 dark:text-white mb-2">Retorno Potencial</h5>
+                    <p className="text-sm text-emerald-600 font-medium">{selectedRecommendationData.potentialReturn}%</p>
+                  </div>
+                )}
+                {selectedRecommendationData.riskLevel && (
+                  <div>
+                    <h5 className="font-medium text-slate-900 dark:text-white mb-2">Nivel de Riesgo</h5>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 capitalize">{selectedRecommendationData.riskLevel}</p>
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <h5 className="font-medium text-slate-900 dark:text-white mb-2">Tags</h5>
+                <div className="flex flex-wrap gap-2">
+                  {selectedRecommendationData.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
+                <div className="flex items-center space-x-2">
+                  <Button onClick={() => handleApplyRecommendation(selectedRecommendationData)}>
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Aplicar Recomendación
+                  </Button>
+                  <Button variant="outline" onClick={() => handleBookmarkRecommendation(selectedRecommendationData)}>
+                    <Bookmark className="w-4 h-4 mr-2" />
+                    Guardar
+                  </Button>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Button variant="outline" size="sm" onClick={() => handleShareRecommendation(selectedRecommendationData)}>
+                    <Share2 className="w-4 h-4" />
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => handleEditRecommendation(selectedRecommendationData)}>
+                    <Edit className="w-4 h-4" />
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => handleDeleteRecommendation(selectedRecommendationData)}>
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Detalles de Insight */}
+      {showInsightModal && selectedInsightData && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Análisis Completo
+                </h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowInsightModal(false)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="p-6 space-y-6">
+              <div className="flex items-start space-x-4">
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${selectedInsightData.color.replace('text-', 'bg-')} bg-opacity-10 border border-current border-opacity-20`}>
+                  {selectedInsightData.icon}
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                    {selectedInsightData.title}
+                  </h4>
+                  <p className="text-slate-600 dark:text-slate-400 mb-4">
+                    {selectedInsightData.description}
+                  </p>
+                  <div className="flex items-center space-x-4">
+                    <div className={`flex items-center space-x-1 ${selectedInsightData.trend === 'up' ? 'text-emerald-600' : selectedInsightData.trend === 'down' ? 'text-red-600' : 'text-slate-600'}`}>
+                      {selectedInsightData.trend === 'up' ? <ArrowUpRight className="w-4 h-4" /> : selectedInsightData.trend === 'down' ? <ArrowDownRight className="w-4 h-4" /> : <span className="w-4 h-4">—</span>}
+                      <span className="font-medium">{selectedInsightData.value}</span>
+                    </div>
+                    <span className="text-sm text-slate-600 dark:text-slate-400">
+                      {selectedInsightData.accuracy}% precisión
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h5 className="font-medium text-slate-900 dark:text-white mb-2">Datos Analizados</h5>
+                  <p className="text-lg font-bold text-slate-900 dark:text-white">{selectedInsightData.dataPoints.toLocaleString()}</p>
+                </div>
+                <div>
+                  <h5 className="font-medium text-slate-900 dark:text-white mb-2">Última Actualización</h5>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">{selectedInsightData.lastUpdated}</p>
+                </div>
+                <div>
+                  <h5 className="font-medium text-slate-900 dark:text-white mb-2">Cambio</h5>
+                  <p className={`text-lg font-bold ${selectedInsightData.change > 0 ? 'text-emerald-600' : selectedInsightData.change < 0 ? 'text-red-600' : 'text-slate-600'}`}>
+                    {selectedInsightData.change > 0 ? '+' : ''}{selectedInsightData.change}%
+                  </p>
+                </div>
+                <div>
+                  <h5 className="font-medium text-slate-900 dark:text-white mb-2">Tipo de Insight</h5>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 capitalize">{selectedInsightData.type}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
+                <Button onClick={() => handleAnalyticsClick()}>
+                  <BarChart3 className="w-4 h-4 mr-2" />
+                  Ver Análisis Avanzado
+                </Button>
+                <Button variant="outline" onClick={() => handleDownloadReport()}>
+                  <Download className="w-4 h-4 mr-2" />
+                  Descargar Reporte
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Detalles del Modelo */}
+      {showModelModal && selectedModelData && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Detalles del Modelo
+                </h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowModelModal(false)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="p-6 space-y-6">
+              <div className="flex items-start space-x-4">
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${selectedModelData.color.replace('text-', 'bg-')} bg-opacity-10 border border-current border-opacity-20`}>
+                  {selectedModelData.icon}
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                    {selectedModelData.name}
+                  </h4>
+                  <p className="text-slate-600 dark:text-slate-400 mb-4">
+                    {selectedModelData.description}
+                  </p>
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(selectedModelData.status)}`}>
+                    {getStatusLabel(selectedModelData.status)}
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h5 className="font-medium text-slate-900 dark:text-white mb-2">Precisión</h5>
+                  <p className="text-lg font-bold text-slate-900 dark:text-white">{selectedModelData.accuracy}%</p>
+                </div>
+                <div>
+                  <h5 className="font-medium text-slate-900 dark:text-white mb-2">Tasa de Éxito</h5>
+                  <p className="text-lg font-bold text-emerald-600">{selectedModelData.successRate}%</p>
+                </div>
+                <div>
+                  <h5 className="font-medium text-slate-900 dark:text-white mb-2">Predicciones</h5>
+                  <p className="text-lg font-bold text-slate-900 dark:text-white">{selectedModelData.predictions.toLocaleString()}</p>
+                </div>
+                <div>
+                  <h5 className="font-medium text-slate-900 dark:text-white mb-2">Último Entrenamiento</h5>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">{selectedModelData.lastTrained}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
+                <Button onClick={() => handleAnalyticsClick()}>
+                  <BarChart3 className="w-4 h-4 mr-2" />
+                  Ver Métricas Detalladas
+                </Button>
+                <Button variant="outline" onClick={() => handleSettingsClick()}>
+                  <Settings className="w-4 h-4 mr-2" />
+                  Configurar Modelo
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Configuración */}
+      {showSettingsModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Configuración de IA
+                </h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowSettingsModal(false)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-medium text-slate-900 dark:text-white mb-2">Filtros de Recomendaciones</h4>
+                  <div className="space-y-2">
+                    <label className="flex items-center space-x-2">
+                      <input type="checkbox" className="rounded" defaultChecked />
+                      <span className="text-sm text-slate-600 dark:text-slate-400">Inversiones</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="checkbox" className="rounded" defaultChecked />
+                      <span className="text-sm text-slate-600 dark:text-slate-400">Ahorros</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="checkbox" className="rounded" defaultChecked />
+                      <span className="text-sm text-slate-600 dark:text-slate-400">Alertas</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="checkbox" className="rounded" defaultChecked />
+                      <span className="text-sm text-slate-600 dark:text-slate-400">Oportunidades</span>
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-medium text-slate-900 dark:text-white mb-2">Notificaciones</h4>
+                  <div className="space-y-2">
+                    <label className="flex items-center space-x-2">
+                      <input type="checkbox" className="rounded" defaultChecked />
+                      <span className="text-sm text-slate-600 dark:text-slate-400">Nuevas recomendaciones</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="checkbox" className="rounded" defaultChecked />
+                      <span className="text-sm text-slate-600 dark:text-slate-400">Alertas de riesgo</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="checkbox" className="rounded" defaultChecked />
+                      <span className="text-sm text-slate-600 dark:text-slate-400">Actualizaciones de modelos</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
+                <Button variant="outline" onClick={() => setShowSettingsModal(false)}>
+                  Cancelar
+                </Button>
+                <Button onClick={() => setShowSettingsModal(false)}>
+                  Guardar Configuración
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Nueva Recomendación */}
+      {showCreateRecommendationModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Nueva Recomendación
+                </h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowCreateRecommendationModal(false)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-900 dark:text-white mb-2">
+                  Título
+                </label>
+                <input
+                  type="text"
+                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                  placeholder="Ingresa el título de la recomendación"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-900 dark:text-white mb-2">
+                  Descripción
+                </label>
+                <textarea
+                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                  rows={3}
+                  placeholder="Describe la recomendación"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-900 dark:text-white mb-2">
+                  Tipo
+                </label>
+                <select className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white">
+                  <option value="investment">Inversión</option>
+                  <option value="savings">Ahorro</option>
+                  <option value="risk">Riesgo</option>
+                  <option value="opportunity">Oportunidad</option>
+                  <option value="alert">Alerta</option>
+                </select>
+              </div>
+              <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
+                <Button variant="outline" onClick={() => setShowCreateRecommendationModal(false)}>
+                  Cancelar
+                </Button>
+                <Button onClick={() => setShowCreateRecommendationModal(false)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Crear Recomendación
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Analytics */}
+      {showAnalyticsModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Análisis Avanzado
+                </h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowAnalyticsModal(false)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-center">
+                      <p className="text-sm text-slate-600 dark:text-slate-400">Precisión Promedio</p>
+                      <p className="text-2xl font-bold text-slate-900 dark:text-white">87%</p>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-center">
+                      <p className="text-sm text-slate-600 dark:text-slate-400">Recomendaciones Aplicadas</p>
+                      <p className="text-2xl font-bold text-slate-900 dark:text-white">24</p>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-center">
+                      <p className="text-sm text-slate-600 dark:text-slate-400">ROI Promedio</p>
+                      <p className="text-2xl font-bold text-emerald-600">+12.5%</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <div className="space-y-4">
+                <h4 className="font-medium text-slate-900 dark:text-white">Métricas de Rendimiento</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                    <span className="text-sm text-slate-600 dark:text-slate-400">Tasa de Aceptación</span>
+                    <span className="font-medium text-slate-900 dark:text-white">78%</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                    <span className="text-sm text-slate-600 dark:text-slate-400">Tiempo de Respuesta</span>
+                    <span className="font-medium text-slate-900 dark:text-white">2.3s</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                    <span className="text-sm text-slate-600 dark:text-slate-400">Uptime del Sistema</span>
+                    <span className="font-medium text-slate-900 dark:text-white">99.9%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Reporte */}
+      {showReportModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Descargar Reporte
+                </h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowReportModal(false)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-medium text-slate-900 dark:text-white mb-2">Tipo de Reporte</h4>
+                  <div className="space-y-2">
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="reportType" className="rounded" defaultChecked />
+                      <span className="text-sm text-slate-600 dark:text-slate-400">Reporte Completo</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="reportType" className="rounded" />
+                      <span className="text-sm text-slate-600 dark:text-slate-400">Solo Recomendaciones</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="reportType" className="rounded" />
+                      <span className="text-sm text-slate-600 dark:text-slate-400">Solo Insights</span>
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-medium text-slate-900 dark:text-white mb-2">Formato</h4>
+                  <div className="space-y-2">
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="format" className="rounded" defaultChecked />
+                      <span className="text-sm text-slate-600 dark:text-slate-400">PDF</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="format" className="rounded" />
+                      <span className="text-sm text-slate-600 dark:text-slate-400">Excel</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="format" className="rounded" />
+                      <span className="text-sm text-slate-600 dark:text-slate-400">CSV</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
+                <Button variant="outline" onClick={() => setShowReportModal(false)}>
+                  Cancelar
+                </Button>
+                <Button onClick={() => setShowReportModal(false)}>
+                  <Download className="w-4 h-4 mr-2" />
+                  Descargar Reporte
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Información */}
+      {showInfoModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-2xl w-full">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Información sobre IA Insights
+                </h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowInfoModal(false)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="p-6 space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <Brain className="w-5 h-5 text-purple-500 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-slate-900 dark:text-white">Inteligencia Artificial</h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      Nuestros modelos de IA analizan tus datos financieros para generar recomendaciones personalizadas.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <Shield className="w-5 h-5 text-emerald-500 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-slate-900 dark:text-white">Privacidad Garantizada</h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      Todos los datos se procesan de forma segura y anónima para proteger tu privacidad.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <Zap className="w-5 h-5 text-orange-500 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-slate-900 dark:text-white">Tiempo Real</h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      Los insights se actualizan constantemente con datos del mercado en tiempo real.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <Target className="w-5 h-5 text-blue-500 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-slate-900 dark:text-white">Precisión Alta</h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      Nuestros modelos tienen una precisión promedio del 87% en sus predicciones.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

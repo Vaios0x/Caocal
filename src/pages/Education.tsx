@@ -21,7 +21,15 @@ import {
   ArrowRight,
   Video,
   FileText,
-  Headphones
+  Headphones,
+  X,
+  Settings,
+  Plus,
+  Edit,
+  Trash2,
+  CheckCircle,
+  Zap,
+  Info
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
@@ -71,6 +79,23 @@ interface LearningPath {
 export const Education: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'courses' | 'paths' | 'resources' | 'tools'>('courses');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  
+  // State variables for modals
+  const [showCourseModal, setShowCourseModal] = useState(false);
+  const [showPathModal, setShowPathModal] = useState(false);
+  const [showResourceModal, setShowResourceModal] = useState(false);
+  const [showToolModal, setShowToolModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showCreateCourseModal, setShowCreateCourseModal] = useState(false);
+  const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  
+  // State variables for selected data
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [selectedPath, setSelectedPath] = useState<LearningPath | null>(null);
+  const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
+  const [selectedTool, setSelectedTool] = useState<any>(null);
 
   // Cursos de educación financiera
   const courses: Course[] = [
@@ -279,6 +304,105 @@ export const Education: React.FC = () => {
     ? courses 
     : courses.filter(course => course.category === selectedCategory);
 
+  // Handler functions
+  const handleCourseClick = (course: Course) => {
+    setSelectedCourse(course);
+    setShowCourseModal(true);
+  };
+
+  const handlePathClick = (path: LearningPath) => {
+    setSelectedPath(path);
+    setShowPathModal(true);
+  };
+
+  const handleResourceClick = (resource: Resource) => {
+    setSelectedResource(resource);
+    setShowResourceModal(true);
+  };
+
+  const handleToolClick = (tool: any) => {
+    setSelectedTool(tool);
+    setShowToolModal(true);
+  };
+
+  const handleSettingsClick = () => {
+    setShowSettingsModal(true);
+  };
+
+  const handleCreateCourse = () => {
+    setShowCreateCourseModal(true);
+  };
+
+  const handleAnalyticsClick = () => {
+    setShowAnalyticsModal(true);
+  };
+
+  const handleDownloadReport = () => {
+    setShowReportModal(true);
+  };
+
+  const handleInfoClick = () => {
+    setShowInfoModal(true);
+  };
+
+  const handleBookmarkCourse = (course: Course) => {
+    console.log('Curso guardado:', course.title);
+  };
+
+  const handleBookmarkPath = (path: LearningPath) => {
+    console.log('Ruta guardada:', path.title);
+  };
+
+
+
+  const handleShareCourse = (course: Course) => {
+    console.log('Compartir curso:', course.title);
+  };
+
+  const handleSharePath = (path: LearningPath) => {
+    console.log('Compartir ruta:', path.title);
+  };
+
+  const handleShareResource = (resource: Resource) => {
+    console.log('Compartir recurso:', resource.title);
+  };
+
+  const handleEditCourse = (course: Course) => {
+    console.log('Editar curso:', course.title);
+  };
+
+  const handleEditPath = (path: LearningPath) => {
+    console.log('Editar ruta:', path.title);
+  };
+
+  const handleEditResource = (resource: Resource) => {
+    console.log('Editar recurso:', resource.title);
+  };
+
+  const handleDeleteCourse = (course: Course) => {
+    console.log('Eliminar curso:', course.title);
+  };
+
+  const handleDeletePath = (path: LearningPath) => {
+    console.log('Eliminar ruta:', path.title);
+  };
+
+  const handleDeleteResource = (resource: Resource) => {
+    console.log('Eliminar recurso:', resource.title);
+  };
+
+  const handleApplyCourse = (course: Course) => {
+    console.log('Aplicar curso:', course.title);
+  };
+
+  const handleApplyPath = (path: LearningPath) => {
+    console.log('Aplicar ruta:', path.title);
+  };
+
+  const handleApplyResource = (resource: Resource) => {
+    console.log('Aplicar recurso:', resource.title);
+  };
+
   return (
     <div className="space-y-8 lg:space-y-12">
       {/* Header de la página */}
@@ -443,6 +567,25 @@ export const Education: React.FC = () => {
                 Avanzados
               </Button>
             </div>
+            
+            <div className="flex items-center space-x-2">
+              <Button variant="outline" size="sm" onClick={handleSettingsClick}>
+                <Settings className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleAnalyticsClick}>
+                <BarChart3 className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleDownloadReport}>
+                <Download className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleInfoClick}>
+                <Info className="w-4 h-4" />
+              </Button>
+              <Button size="sm" onClick={handleCreateCourse}>
+                <Plus className="w-4 h-4 mr-2" />
+                Nuevo Curso
+              </Button>
+            </div>
           </div>
 
           {/* Grid de cursos */}
@@ -514,11 +657,11 @@ export const Education: React.FC = () => {
                       </div>
                       
                       <div className="flex items-center space-x-2">
-                        <Button size="sm">
+                        <Button size="sm" onClick={() => handleCourseClick(course)}>
                           <Play className="w-4 h-4 mr-2" />
                           Comenzar
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" onClick={() => handleBookmarkCourse(course)}>
                           <Bookmark className="w-4 h-4" />
                         </Button>
                       </div>
@@ -538,6 +681,31 @@ export const Education: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="space-y-8"
         >
+          {/* Header with actions */}
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+              Rutas de Aprendizaje
+            </h3>
+            <div className="flex items-center space-x-2">
+              <Button variant="outline" size="sm" onClick={handleSettingsClick}>
+                <Settings className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleAnalyticsClick}>
+                <BarChart3 className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleDownloadReport}>
+                <Download className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleInfoClick}>
+                <Info className="w-4 h-4" />
+              </Button>
+              <Button size="sm" onClick={handleCreateCourse}>
+                <Plus className="w-4 h-4 mr-2" />
+                Nueva Ruta
+              </Button>
+            </div>
+          </div>
+          
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {learningPaths.map((path, index) => (
               <motion.div
@@ -577,7 +745,7 @@ export const Education: React.FC = () => {
                       </div>
                     </div>
                     
-                    <Button className="w-full">
+                    <Button className="w-full" onClick={() => handlePathClick(path)}>
                       <ArrowRight className="w-4 h-4 mr-2" />
                       Comenzar Ruta
                     </Button>
@@ -596,6 +764,31 @@ export const Education: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="space-y-8"
         >
+          {/* Header with actions */}
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+              Recursos Educativos
+            </h3>
+            <div className="flex items-center space-x-2">
+              <Button variant="outline" size="sm" onClick={handleSettingsClick}>
+                <Settings className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleAnalyticsClick}>
+                <BarChart3 className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleDownloadReport}>
+                <Download className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleInfoClick}>
+                <Info className="w-4 h-4" />
+              </Button>
+              <Button size="sm" onClick={handleCreateCourse}>
+                <Plus className="w-4 h-4 mr-2" />
+                Nuevo Recurso
+              </Button>
+            </div>
+          </div>
+          
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {resources.map((resource, index) => (
               <motion.div
@@ -643,14 +836,14 @@ export const Education: React.FC = () => {
                       </div>
                       
                       <div className="flex items-center space-x-2">
-                        <Button size="sm">
+                        <Button size="sm" onClick={() => handleResourceClick(resource)}>
                           <Play className="w-4 h-4 mr-2" />
                           Ver
                         </Button>
                         <Button variant="outline" size="sm">
                           <Download className="w-4 h-4" />
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" onClick={() => handleShareResource(resource)}>
                           <Share2 className="w-4 h-4" />
                         </Button>
                       </div>
@@ -670,6 +863,31 @@ export const Education: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="space-y-8"
         >
+          {/* Header with actions */}
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+              Herramientas Educativas
+            </h3>
+            <div className="flex items-center space-x-2">
+              <Button variant="outline" size="sm" onClick={handleSettingsClick}>
+                <Settings className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleAnalyticsClick}>
+                <BarChart3 className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleDownloadReport}>
+                <Download className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleInfoClick}>
+                <Info className="w-4 h-4" />
+              </Button>
+              <Button size="sm" onClick={handleCreateCourse}>
+                <Plus className="w-4 h-4 mr-2" />
+                Nueva Herramienta
+              </Button>
+            </div>
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
@@ -739,7 +957,7 @@ export const Education: React.FC = () => {
                         </p>
                       </div>
                       
-                      <Button className="w-full" size="sm">
+                      <Button className="w-full" size="sm" onClick={() => handleToolClick(tool)}>
                         <ArrowRight className="w-4 h-4 mr-2" />
                         Usar Herramienta
                       </Button>
@@ -750,6 +968,593 @@ export const Education: React.FC = () => {
             ))}
           </div>
         </motion.div>
+      )}
+
+      {/* Modals */}
+      {/* Course Details Modal */}
+      {showCourseModal && selectedCourse && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                  {selectedCourse.title}
+                </h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowCourseModal(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getCategoryColor(selectedCourse.category)}`}>
+                    {selectedCourse.category.charAt(0).toUpperCase() + selectedCourse.category.slice(1)}
+                  </span>
+                  <div className="flex items-center space-x-1">
+                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                    <span className="font-medium">{selectedCourse.rating}</span>
+                  </div>
+                </div>
+                
+                <p className="text-slate-600 dark:text-slate-400">
+                  {selectedCourse.description}
+                </p>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Duración</p>
+                    <p className="font-medium">{selectedCourse.duration}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Lecciones</p>
+                    <p className="font-medium">{selectedCourse.lessons}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Estudiantes</p>
+                    <p className="font-medium">{selectedCourse.students.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Etiquetas</p>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {selectedCourse.tags.map((tag, index) => (
+                        <span key={index} className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <Button onClick={() => handleApplyCourse(selectedCourse)}>
+                  <Play className="w-4 h-4 mr-2" />
+                  Comenzar Curso
+                </Button>
+                <Button variant="outline" onClick={() => handleBookmarkCourse(selectedCourse)}>
+                  <Bookmark className="w-4 h-4 mr-2" />
+                  Guardar
+                </Button>
+                <Button variant="outline" onClick={() => handleShareCourse(selectedCourse)}>
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Compartir
+                </Button>
+                <Button variant="outline" onClick={() => handleEditCourse(selectedCourse)}>
+                  <Edit className="w-4 h-4 mr-2" />
+                  Editar
+                </Button>
+                <Button variant="outline" onClick={() => handleDeleteCourse(selectedCourse)}>
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Eliminar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Path Details Modal */}
+      {showPathModal && selectedPath && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                  {selectedPath.title}
+                </h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowPathModal(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${selectedPath.color.replace('text-', 'bg-')} bg-opacity-10 border border-current border-opacity-20`}>
+                    {selectedPath.icon}
+                  </div>
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getLevelColor(selectedPath.level)}`}>
+                    {selectedPath.level.charAt(0).toUpperCase() + selectedPath.level.slice(1)}
+                  </span>
+                </div>
+                
+                <p className="text-slate-600 dark:text-slate-400">
+                  {selectedPath.description}
+                </p>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Cursos</p>
+                    <p className="font-medium">{selectedPath.courses}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Duración</p>
+                    <p className="font-medium">{selectedPath.duration}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <Button onClick={() => handleApplyPath(selectedPath)}>
+                  <ArrowRight className="w-4 h-4 mr-2" />
+                  Comenzar Ruta
+                </Button>
+                <Button variant="outline" onClick={() => handleBookmarkPath(selectedPath)}>
+                  <Bookmark className="w-4 h-4 mr-2" />
+                  Guardar
+                </Button>
+                <Button variant="outline" onClick={() => handleSharePath(selectedPath)}>
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Compartir
+                </Button>
+                <Button variant="outline" onClick={() => handleEditPath(selectedPath)}>
+                  <Edit className="w-4 h-4 mr-2" />
+                  Editar
+                </Button>
+                <Button variant="outline" onClick={() => handleDeletePath(selectedPath)}>
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Eliminar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Resource Details Modal */}
+      {showResourceModal && selectedResource && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                  {selectedResource.title}
+                </h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowResourceModal(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${selectedResource.color.replace('text-', 'bg-')} bg-opacity-10 border border-current border-opacity-20`}>
+                    {selectedResource.icon}
+                  </div>
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(selectedResource.type)}`}>
+                    {selectedResource.type.charAt(0).toUpperCase() + selectedResource.type.slice(1)}
+                  </span>
+                </div>
+                
+                <p className="text-slate-600 dark:text-slate-400">
+                  {selectedResource.description}
+                </p>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Duración</p>
+                    <p className="font-medium">{selectedResource.duration}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Vistas</p>
+                    <p className="font-medium">{selectedResource.views.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Autor</p>
+                    <p className="font-medium">{selectedResource.author}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Fecha</p>
+                    <p className="font-medium">{selectedResource.date}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <Button onClick={() => handleApplyResource(selectedResource)}>
+                  <Play className="w-4 h-4 mr-2" />
+                  Ver Recurso
+                </Button>
+                <Button variant="outline">
+                  <Download className="w-4 h-4 mr-2" />
+                  Descargar
+                </Button>
+                <Button variant="outline" onClick={() => handleShareResource(selectedResource)}>
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Compartir
+                </Button>
+                <Button variant="outline" onClick={() => handleEditResource(selectedResource)}>
+                  <Edit className="w-4 h-4 mr-2" />
+                  Editar
+                </Button>
+                <Button variant="outline" onClick={() => handleDeleteResource(selectedResource)}>
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Eliminar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tool Details Modal */}
+      {showToolModal && selectedTool && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                  {selectedTool.title}
+                </h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowToolModal(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="space-y-4">
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${selectedTool.bgColor} border border-current border-opacity-20`}>
+                  <div className={selectedTool.color}>
+                    {selectedTool.icon}
+                  </div>
+                </div>
+                
+                <p className="text-slate-600 dark:text-slate-400">
+                  {selectedTool.description}
+                </p>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <Button>
+                  <ArrowRight className="w-4 h-4 mr-2" />
+                  Usar Herramienta
+                </Button>
+                <Button variant="outline">
+                  <Info className="w-4 h-4 mr-2" />
+                  Más Información
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Settings Modal */}
+      {showSettingsModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Configuración de Educación
+                </h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowSettingsModal(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Notificaciones de Cursos</span>
+                  <Button variant="outline" size="sm">
+                    <Settings className="w-4 h-4" />
+                  </Button>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Progreso Automático</span>
+                  <Button variant="outline" size="sm">
+                    <CheckCircle className="w-4 h-4" />
+                  </Button>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Certificados</span>
+                  <Button variant="outline" size="sm">
+                    <Zap className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Create Course Modal */}
+      {showCreateCourseModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-2xl w-full">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Crear Nuevo Curso
+                </h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowCreateCourseModal(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-4">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Título del Curso
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                    placeholder="Ingresa el título del curso"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Descripción
+                  </label>
+                  <textarea
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                    rows={3}
+                    placeholder="Describe el contenido del curso"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                      Categoría
+                    </label>
+                    <select className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white">
+                      <option value="básico">Básico</option>
+                      <option value="intermedio">Intermedio</option>
+                      <option value="avanzado">Avanzado</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                      Duración
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                      placeholder="ej: 4 horas"
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <Button>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Crear Curso
+                </Button>
+                <Button variant="outline" onClick={() => setShowCreateCourseModal(false)}>
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Analytics Modal */}
+      {showAnalyticsModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Análisis de Educación
+                </h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowAnalyticsModal(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+                        Estudiantes Activos
+                      </h3>
+                      <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                        {courses.reduce((sum, course) => sum + course.students, 0).toLocaleString()}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <BookOpen className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+                        Cursos Completados
+                      </h3>
+                      <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+                        1,234
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <Star className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+                        Calificación Promedio
+                      </h3>
+                      <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+                        4.8
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Report Modal */}
+      {showReportModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Descargar Reporte
+                </h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowReportModal(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Reporte de Progreso</span>
+                  <Button variant="outline" size="sm">
+                    <Download className="w-4 h-4" />
+                  </Button>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Certificados</span>
+                  <Button variant="outline" size="sm">
+                    <Download className="w-4 h-4" />
+                  </Button>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Análisis de Rendimiento</span>
+                  <Button variant="outline" size="sm">
+                    <Download className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Info Modal */}
+      {showInfoModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Información Importante
+                </h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowInfoModal(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-start space-x-3">
+                  <Info className="w-5 h-5 text-blue-500 mt-0.5" />
+                  <div>
+                    <h3 className="font-medium text-slate-900 dark:text-white">Certificaciones</h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      Todos nuestros cursos cuentan con certificaciones reconocidas por instituciones financieras.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="w-5 h-5 text-emerald-500 mt-0.5" />
+                  <div>
+                    <h3 className="font-medium text-slate-900 dark:text-white">Contenido Actualizado</h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      Nuestro contenido se actualiza regularmente para reflejar las últimas tendencias del mercado.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <Shield className="w-5 h-5 text-purple-500 mt-0.5" />
+                  <div>
+                    <h3 className="font-medium text-slate-900 dark:text-white">Seguridad</h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      Tu progreso y datos están protegidos con los más altos estándares de seguridad.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

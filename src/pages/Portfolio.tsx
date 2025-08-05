@@ -4,49 +4,28 @@ import { useUserData } from '../hooks/useUserData.js';
 import { PortfolioValueChart } from '../components/portfolio/PortfolioValueChart';
 import { PerformanceChart } from '../components/portfolio/PerformanceChart';
 import { RwaPortfolioCard } from '../components/portfolio/RwaPortfolioCard';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent } from '../components/ui/Card';
 import { 
-  TrendingUp, 
-  TrendingDown, 
-  DollarSign, 
   PieChart, 
-  BarChart3, 
-  Shield, 
-  Globe, 
   Activity, 
   LineChart, 
-  Settings, 
-  Download, 
   Eye, 
-  EyeOff,
-  Filter,
+  EyeOff, 
+  Filter, 
   X,
-  ExternalLink,
-  Share2,
+  Shield,
+  TrendingUp,
+  Globe,
+  DollarSign,
+  TrendingDown,
+  BarChart3,
   Info,
-  AlertCircle,
-  CheckCircle,
-  Plus,
-  Minus,
-  Edit,
-  Trash2,
-  Star,
   BookOpen,
-  Calculator,
-  ChevronRight,
-  ChevronDown,
-  ChevronUp,
-  ArrowRight,
-  Lock,
-  Zap,
-  Users,
-  Award,
-  Clock,
-  Calendar,
-  Bell,
-  MessageCircle
+  Link,
+  Settings,
+  Download
 } from 'lucide-react';
 import type { Asset, Portfolio as PortfolioType } from '../data/mockData.js';
 
@@ -55,13 +34,13 @@ export const Portfolio: React.FC = () => {
   const { portfolio, isLoading, error } = useUserData();
   const [showSensitiveData, setShowSensitiveData] = useState(false);
   const [sortBy, setSortBy] = useState<'value' | 'change' | 'name'>('value');
-  const [selectedAsset, setSelectedAsset] = useState<string | null>(null);
+  const [selectedAsset] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showAssetModal, setShowAssetModal] = useState<string | null>(null);
   const [showDistributionModal, setShowDistributionModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showRwaInfoModal, setShowRwaInfoModal] = useState(false);
-  const [expandedAssets, setExpandedAssets] = useState<string[]>([]);
+
 
   // Calcular estadísticas dinámicas
   const portfolioData = portfolio as PortfolioType;
@@ -135,9 +114,7 @@ export const Portfolio: React.FC = () => {
     generatedAt: new Date().toLocaleString('es-MX')
   };
 
-  const handleAssetClick = (assetSymbol: string) => {
-    setShowAssetModal(assetSymbol);
-  };
+
 
   const handleDistributionClick = () => {
     setShowDistributionModal(true);
@@ -151,17 +128,9 @@ export const Portfolio: React.FC = () => {
     setShowRwaInfoModal(true);
   };
 
-  const handleAssetExpand = (assetSymbol: string) => {
-    if (expandedAssets.includes(assetSymbol)) {
-      setExpandedAssets(expandedAssets.filter(symbol => symbol !== assetSymbol));
-    } else {
-      setExpandedAssets([...expandedAssets, assetSymbol]);
-    }
-  };
 
-  const handleAdjustRate = () => {
-    navigate('/dashboard');
-  };
+
+
 
   const getColorClass = (color: string) => {
     switch (color) {

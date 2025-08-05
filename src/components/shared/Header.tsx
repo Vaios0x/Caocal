@@ -20,7 +20,8 @@ import {
   X,
   Check,
   Trash2,
-  Eye
+  Eye,
+  Edit
 } from 'lucide-react';
 import { Button } from '@components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
@@ -31,9 +32,15 @@ export const Header: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useUserData();
-  const { notifications, unreadCount, markAsRead, markAllAsRead, deleteNotification, isLoading } = useNotifications();
+  const { notifications, unreadCount, markAllAsRead, deleteNotification, isLoading } = useNotifications();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  
+  // Estados para modales
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showNotificationDetailsModal, setShowNotificationDetailsModal] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState<any>(null);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -47,14 +54,31 @@ export const Header: React.FC = () => {
     setShowProfileMenu(false);
   };
 
-  const handleNotificationAction = (notification: any) => {
-    if (notification.actionUrl) {
-      navigate(notification.actionUrl);
-      setShowNotifications(false);
-    }
-    if (!notification.isRead) {
-      markAsRead(notification.id);
-    }
+  // Funciones de manejo para botones del perfil
+  const handleViewProfile = () => {
+    setShowProfileModal(true);
+    setShowProfileMenu(false);
+  };
+
+  const handleSettings = () => {
+    setShowProfileMenu(false);
+    navigate('/settings');
+  };
+
+  const handleHelp = () => {
+    setShowProfileMenu(false);
+    navigate('/help');
+  };
+
+  const handleLogout = () => {
+    setShowLogoutModal(true);
+    setShowProfileMenu(false);
+  };
+
+  const handleNotificationDetails = (notification: any) => {
+    setSelectedNotification(notification);
+    setShowNotificationDetailsModal(true);
+    setShowNotifications(false);
   };
 
   const formatDate = (dateString: string) => {
@@ -124,16 +148,18 @@ export const Header: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-info rounded-xl flex items-center justify-center shadow-lg animate-float">
-                <Sparkles className="w-5 h-5 text-primary-foreground" />
+            <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200 cursor-pointer">
+              <div className="relative">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary to-info rounded-xl flex items-center justify-center shadow-lg animate-float">
+                  <Sparkles className="w-5 h-5 text-primary-foreground" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-success rounded-full animate-pulse-slow"></div>
               </div>
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-success rounded-full animate-pulse-slow"></div>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-bold gradient-text">Caocal</span>
-              <span className="text-xs text-muted-foreground">Wealth as a Service</span>
-            </div>
+              <div className="flex flex-col">
+                <span className="text-xl font-bold gradient-text">Caocal</span>
+                <span className="text-xs text-muted-foreground">Wealth as a Service</span>
+              </div>
+            </Link>
           </motion.div>
 
           {/* Navegación mejorada */}
@@ -252,7 +278,7 @@ export const Header: React.FC = () => {
                                   className={`p-3 border-l-4 cursor-pointer hover:bg-muted/50 transition-colors ${
                                     !notification.isRead ? 'bg-muted/20' : ''
                                   } ${getNotificationTypeColor(notification.type)}`}
-                                  onClick={() => handleNotificationAction(notification)}
+                                  onClick={() => handleNotificationDetails(notification)}
                                 >
                                   <div className="flex items-start space-x-3">
                                     <div className="flex-shrink-0 mt-0.5">
@@ -309,6 +335,7 @@ export const Header: React.FC = () => {
               variant="ghost" 
               size="sm"
               aria-label="Configuración"
+              onClick={() => navigate('/settings')}
             >
               <Settings className="w-4 h-4" />
             </Button>
@@ -427,6 +454,7 @@ export const Header: React.FC = () => {
                               size="sm"
                               className="w-full justify-start"
                               aria-label="Ver perfil completo"
+                              onClick={handleViewProfile}
                             >
                               <User className="w-4 h-4 mr-2" />
                               Ver Perfil
@@ -437,6 +465,7 @@ export const Header: React.FC = () => {
                               size="sm"
                               className="w-full justify-start"
                               aria-label="Configuración de cuenta"
+                              onClick={handleSettings}
                             >
                               <Settings className="w-4 h-4 mr-2" />
                               Configuración
@@ -447,6 +476,7 @@ export const Header: React.FC = () => {
                               size="sm"
                               className="w-full justify-start"
                               aria-label="Ayuda y soporte"
+                              onClick={handleHelp}
                             >
                               <HelpCircle className="w-4 h-4 mr-2" />
                               Ayuda
@@ -457,6 +487,7 @@ export const Header: React.FC = () => {
                               size="sm"
                               className="w-full justify-start text-destructive hover:text-destructive"
                               aria-label="Cerrar sesión"
+                              onClick={handleLogout}
                             >
                               <LogOut className="w-4 h-4 mr-2" />
                               Cerrar Sesión
@@ -496,6 +527,239 @@ export const Header: React.FC = () => {
               setShowNotifications(false);
             }}
           />
+        )}
+      </AnimatePresence>
+
+      {/* Modales */}
+      <AnimatePresence>
+        {/* Profile Modal */}
+        {showProfileModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowProfileModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                    <User className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white">Perfil de Usuario</h3>
+                </div>
+                <Button
+                  onClick={() => setShowProfileModal(false)}
+                  variant="ghost"
+                  size="sm"
+                  className="text-slate-400 hover:text-slate-300"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-3">
+                      <img
+                        src={user?.avatarUrl}
+                        alt={`Avatar de ${user?.name}`}
+                        className="w-16 h-16 rounded-full object-cover ring-2 ring-blue-500/20"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || '')}&background=6366f1&color=fff&size=150`;
+                        }}
+                      />
+                      <div>
+                        <h4 className="text-xl font-bold text-white">{user?.name}</h4>
+                        <p className="text-slate-400">{user?.email}</p>
+                        <div className="flex items-center space-x-2 mt-1">
+                          {user?.subscription && getSubscriptionIcon(user.subscription)}
+                          <span className="text-sm text-slate-400">{user?.role || 'Usuario'}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h5 className="text-lg font-semibold text-white">Información de Cuenta</h5>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-300">Estado:</span>
+                        <span className="text-emerald-500 font-medium">Activo</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-300">Miembro desde:</span>
+                        <span className="text-slate-400">{user?.memberSince ? formatDate(user.memberSince) : 'N/A'}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-300">Última actividad:</span>
+                        <span className="text-slate-400">{user?.lastActive ? formatDate(user.lastActive) : 'N/A'}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-end space-x-3 pt-6 border-t border-slate-700">
+                  <Button
+                    onClick={() => setShowProfileModal(false)}
+                    variant="outline"
+                    className="border-slate-600 text-slate-300"
+                  >
+                    Cerrar
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      navigate('/settings');
+                      setShowProfileModal(false);
+                    }}
+                    className="bg-gradient-to-r from-blue-600 to-purple-600"
+                  >
+                    <Edit className="w-4 h-4 mr-2" />
+                    Editar Perfil
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Notification Details Modal */}
+        {showNotificationDetailsModal && selectedNotification && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowNotificationDetailsModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                    {getNotificationTypeIcon(selectedNotification.type)}
+                  </div>
+                  <h3 className="text-xl font-bold text-white">Detalles de Notificación</h3>
+                </div>
+                <Button
+                  onClick={() => setShowNotificationDetailsModal(false)}
+                  variant="ghost"
+                  size="sm"
+                  className="text-slate-400 hover:text-slate-300"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-lg font-semibold text-white mb-2">{selectedNotification.title}</h4>
+                  <p className="text-slate-300">{selectedNotification.message}</p>
+                </div>
+                
+                <div className="flex items-center justify-between text-sm text-slate-400">
+                  <span>{formatDate(selectedNotification.createdAt)}</span>
+                  <span className={`px-2 py-1 rounded-full text-xs ${
+                    selectedNotification.type === 'success' ? 'bg-emerald-500/20 text-emerald-400' :
+                    selectedNotification.type === 'warning' ? 'bg-yellow-500/20 text-yellow-400' :
+                    selectedNotification.type === 'error' ? 'bg-red-500/20 text-red-400' :
+                    'bg-blue-500/20 text-blue-400'
+                  }`}>
+                    {selectedNotification.type}
+                  </span>
+                </div>
+                
+                {selectedNotification.actionUrl && (
+                  <Button
+                    onClick={() => {
+                      navigate(selectedNotification.actionUrl);
+                      setShowNotificationDetailsModal(false);
+                    }}
+                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600"
+                  >
+                    Ver Detalles
+                  </Button>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Logout Modal */}
+        {showLogoutModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowLogoutModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-red-600 to-orange-600 rounded-lg flex items-center justify-center">
+                    <LogOut className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white">Cerrar Sesión</h3>
+                </div>
+                <Button
+                  onClick={() => setShowLogoutModal(false)}
+                  variant="ghost"
+                  size="sm"
+                  className="text-slate-400 hover:text-slate-300"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <p className="text-slate-300">
+                  ¿Estás seguro de que quieres cerrar sesión? Se guardarán tus cambios automáticamente.
+                </p>
+                
+                <div className="flex items-center justify-end space-x-3 pt-6">
+                  <Button
+                    onClick={() => setShowLogoutModal(false)}
+                    variant="outline"
+                    className="border-slate-600 text-slate-300"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      console.log('Cerrando sesión...');
+                      setShowLogoutModal(false);
+                      // Aquí iría la lógica de logout
+                    }}
+                    className="bg-gradient-to-r from-red-600 to-orange-600"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Cerrar Sesión
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
     </header>

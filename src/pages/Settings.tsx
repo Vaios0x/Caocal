@@ -1,52 +1,33 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Settings, 
   User, 
-  Shield, 
-  Bell, 
   Eye, 
-  EyeOff,
-  Lock,
-  CreditCard,
-  Globe,
-  Moon,
-  Sun,
-  Palette,
-  Smartphone,
-  Mail,
-  Phone,
-  MapPin,
-  AlertCircle,
-  CheckCircle,
-  Info,
-  ChevronRight,
-  ChevronDown,
-  ChevronUp,
+  EyeOff, 
+  Palette, 
   Save,
+  Shield,
+  Bell,
+  TrendingUp,
+  Target,
+  ChevronRight,
+  ChevronUp,
+  ChevronDown,
+  Settings,
+  Download,
   RefreshCw,
   Trash2,
-  Download,
-  Upload,
-  Key,
-  Database,
-  Wifi,
-  WifiOff,
-  Volume2,
-  VolumeX,
-  Calendar,
-  Clock,
+  CheckCircle,
+  X,
+  Edit,
+  Info,
   Zap,
-  Target,
-  TrendingUp,
-  DollarSign,
-  Users,
-  LifeBuoy,
-  HelpCircle,
-  BookOpen,
-  MessageCircle,
-  Mail as MailIcon,
-  Phone as PhoneIcon
+  Lock,
+  Key,
+  Smartphone,
+  Database,
+  FileText,
+  Archive
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
@@ -144,6 +125,15 @@ const appSettings = [
 export const SettingsPage: React.FC = () => {
   const [expandedSection, setExpandedSection] = useState<string | null>('personal');
   const [showSensitiveData, setShowSensitiveData] = useState(false);
+  
+  // Estados para modales
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showSecurityModal, setShowSecurityModal] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  
+  // Estados para datos seleccionados
+  const [selectedSetting, setSelectedSetting] = useState<any>(null);
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -153,13 +143,46 @@ export const SettingsPage: React.FC = () => {
     }
   };
 
-  const getPriorityText = (priority: string) => {
-    switch (priority) {
-      case 'high': return 'High';
-      case 'medium': return 'Medium';
-      default: return 'Low';
-    }
+  // Funciones de manejo para modales
+  const handleProfileClick = (section: any) => {
+    setSelectedSetting(section);
+    setShowProfileModal(true);
   };
+
+  const handleSecurityClick = (section: any) => {
+    setSelectedSetting(section);
+    setShowSecurityModal(true);
+  };
+
+  const handleExportClick = () => {
+    setShowExportModal(true);
+  };
+
+  const handleSyncClick = () => {
+    console.log('Sincronizando configuración...');
+  };
+
+  const handleDeleteAccountClick = () => {
+    console.log('Eliminando cuenta...');
+  };
+
+  const handleBackupClick = () => {
+    console.log('Creando respaldo...');
+  };
+
+  const handleAdvancedClick = () => {
+    console.log('Configuración avanzada...');
+  };
+
+  const handleInfoClick = () => {
+    setShowInfoModal(true);
+  };
+
+  const handleSaveSetting = (setting: any) => {
+    console.log('Guardando configuración:', setting);
+  };
+
+
 
   const renderSettingItem = (item: any) => {
     const isSensitive = item.type === 'password' || item.type === 'email';
@@ -235,6 +258,46 @@ export const SettingsPage: React.FC = () => {
             <p className="text-xl text-slate-300 max-w-3xl mx-auto">
               Gestiona tu perfil, seguridad, notificaciones y preferencias de inversión para personalizar tu experiencia en Caocal.
             </p>
+            
+            {/* Botones de acción */}
+            <div className="flex items-center justify-center space-x-4 mt-8">
+              <Button 
+                onClick={handleInfoClick}
+                variant="outline" 
+                size="sm" 
+                className="border-slate-600 text-slate-300 hover:bg-slate-800"
+              >
+                <Info className="w-4 h-4 mr-2" />
+                Información
+              </Button>
+              <Button 
+                onClick={handleExportClick}
+                variant="outline" 
+                size="sm" 
+                className="border-slate-600 text-slate-300 hover:bg-slate-800"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Exportar
+              </Button>
+              <Button 
+                onClick={handleBackupClick}
+                variant="outline" 
+                size="sm" 
+                className="border-slate-600 text-slate-300 hover:bg-slate-800"
+              >
+                <Archive className="w-4 h-4 mr-2" />
+                Respaldo
+              </Button>
+              <Button 
+                onClick={handleAdvancedClick}
+                variant="outline" 
+                size="sm" 
+                className="border-slate-600 text-slate-300 hover:bg-slate-800"
+              >
+                <Zap className="w-4 h-4 mr-2" />
+                Avanzado
+              </Button>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -278,11 +341,25 @@ export const SettingsPage: React.FC = () => {
                             </div>
                             <CardTitle className="text-white">{section.title}</CardTitle>
                           </div>
-                          {expandedSection === section.id ? (
-                            <ChevronUp className="w-5 h-5 text-slate-400" />
-                          ) : (
-                            <ChevronDown className="w-5 h-5 text-slate-400" />
-                          )}
+                          <div className="flex items-center space-x-2">
+                                                          <Button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (section.id === 'personal') handleProfileClick(section);
+                                  else if (section.id === 'security') handleSecurityClick(section);
+                                }}
+                                variant="ghost"
+                                size="sm"
+                                className="text-slate-400 hover:text-slate-300"
+                              >
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                            {expandedSection === section.id ? (
+                              <ChevronUp className="w-5 h-5 text-slate-400" />
+                            ) : (
+                              <ChevronDown className="w-5 h-5 text-slate-400" />
+                            )}
+                          </div>
                         </div>
                       </CardHeader>
                     </div>
@@ -341,11 +418,24 @@ export const SettingsPage: React.FC = () => {
                             </div>
                             <CardTitle className="text-white">{section.title}</CardTitle>
                           </div>
-                          {expandedSection === section.id ? (
-                            <ChevronUp className="w-5 h-5 text-slate-400" />
-                          ) : (
-                            <ChevronDown className="w-5 h-5 text-slate-400" />
-                          )}
+                          <div className="flex items-center space-x-2">
+                            <Button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                console.log('Configuración de inversión:', section);
+                              }}
+                              variant="ghost"
+                              size="sm"
+                              className="text-slate-400 hover:text-slate-300"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                            {expandedSection === section.id ? (
+                              <ChevronUp className="w-5 h-5 text-slate-400" />
+                            ) : (
+                              <ChevronDown className="w-5 h-5 text-slate-400" />
+                            )}
+                          </div>
                         </div>
                       </CardHeader>
                     </div>
@@ -410,11 +500,24 @@ export const SettingsPage: React.FC = () => {
                           </div>
                           <CardTitle className="text-white">{section.title}</CardTitle>
                         </div>
-                        {expandedSection === section.id ? (
-                          <ChevronUp className="w-5 h-5 text-slate-400" />
-                        ) : (
-                          <ChevronDown className="w-5 h-5 text-slate-400" />
-                        )}
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              console.log('Configuración de aplicación:', section);
+                            }}
+                            variant="ghost"
+                            size="sm"
+                            className="text-slate-400 hover:text-slate-300"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          {expandedSection === section.id ? (
+                            <ChevronUp className="w-5 h-5 text-slate-400" />
+                          ) : (
+                            <ChevronDown className="w-5 h-5 text-slate-400" />
+                          )}
+                        </div>
                       </div>
                     </CardHeader>
                   </div>
@@ -466,15 +569,30 @@ export const SettingsPage: React.FC = () => {
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-6">
-                  <Button variant="outline" size="lg" className="border-slate-600 text-slate-300 hover:bg-slate-800 p-6 h-auto flex-col space-y-2">
+                  <Button 
+                    onClick={handleExportClick}
+                    variant="outline" 
+                    size="lg" 
+                    className="border-slate-600 text-slate-300 hover:bg-slate-800 p-6 h-auto flex-col space-y-2"
+                  >
                     <Download className="w-6 h-6" />
                     <span>Exportar Datos</span>
                   </Button>
-                  <Button variant="outline" size="lg" className="border-slate-600 text-slate-300 hover:bg-slate-800 p-6 h-auto flex-col space-y-2">
+                  <Button 
+                    onClick={handleSyncClick}
+                    variant="outline" 
+                    size="lg" 
+                    className="border-slate-600 text-slate-300 hover:bg-slate-800 p-6 h-auto flex-col space-y-2"
+                  >
                     <RefreshCw className="w-6 h-6" />
                     <span>Sincronizar</span>
                   </Button>
-                  <Button variant="outline" size="lg" className="border-red-500 text-red-400 hover:bg-red-500/10 p-6 h-auto flex-col space-y-2">
+                  <Button 
+                    onClick={handleDeleteAccountClick}
+                    variant="outline" 
+                    size="lg" 
+                    className="border-red-500 text-red-400 hover:bg-red-500/10 p-6 h-auto flex-col space-y-2"
+                  >
                     <Trash2 className="w-6 h-6" />
                     <span>Eliminar Cuenta</span>
                   </Button>
@@ -499,6 +617,356 @@ export const SettingsPage: React.FC = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Modales */}
+      <AnimatePresence>
+        {/* Profile Modal */}
+        {showProfileModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowProfileModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                    <User className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white">Configuración de Perfil</h3>
+                </div>
+                <Button
+                  onClick={() => setShowProfileModal(false)}
+                  variant="ghost"
+                  size="sm"
+                  className="text-slate-400 hover:text-slate-300"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-300">Nombre completo</label>
+                    <input
+                      type="text"
+                      defaultValue="Giovanny Amador"
+                      className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-300">Email</label>
+                    <input
+                      type="email"
+                      defaultValue="giovanny@caocal.mx"
+                      className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-300">Teléfono</label>
+                    <input
+                      type="tel"
+                      defaultValue="+52 55 1234 5678"
+                      className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-300">Fecha de nacimiento</label>
+                    <input
+                      type="date"
+                      defaultValue="1990-03-15"
+                      className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
+                    />
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-end space-x-3 pt-6 border-t border-slate-700">
+                  <Button
+                    onClick={() => setShowProfileModal(false)}
+                    variant="outline"
+                    className="border-slate-600 text-slate-300"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      handleSaveSetting(selectedSetting);
+                      setShowProfileModal(false);
+                    }}
+                    className="bg-gradient-to-r from-blue-600 to-purple-600"
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    Guardar Cambios
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Security Modal */}
+        {showSecurityModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowSecurityModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-red-600 to-orange-600 rounded-lg flex items-center justify-center">
+                    <Shield className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white">Configuración de Seguridad</h3>
+                </div>
+                <Button
+                  onClick={() => setShowSecurityModal(false)}
+                  variant="ghost"
+                  size="sm"
+                  className="text-slate-400 hover:text-slate-300"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-4 bg-slate-700/50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <Key className="w-5 h-5 text-emerald-500" />
+                      <div>
+                        <h4 className="text-white font-medium">Autenticación de dos factores</h4>
+                        <p className="text-slate-400 text-sm">Protege tu cuenta con 2FA</p>
+                      </div>
+                    </div>
+                    <div className="w-10 h-6 bg-emerald-500 rounded-full">
+                      <div className="w-4 h-4 bg-white rounded-full translate-x-4"></div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-4 bg-slate-700/50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <Lock className="w-5 h-5 text-blue-500" />
+                      <div>
+                        <h4 className="text-white font-medium">Cambiar contraseña</h4>
+                        <p className="text-slate-400 text-sm">Última actualización: hace 30 días</p>
+                      </div>
+                    </div>
+                    <Button variant="outline" size="sm" className="border-slate-600 text-slate-300">
+                      <Edit className="w-4 h-4 mr-2" />
+                      Cambiar
+                    </Button>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-4 bg-slate-700/50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <Smartphone className="w-5 h-5 text-purple-500" />
+                      <div>
+                        <h4 className="text-white font-medium">Sesiones activas</h4>
+                        <p className="text-slate-400 text-sm">3 dispositivos conectados</p>
+                      </div>
+                    </div>
+                    <Button variant="outline" size="sm" className="border-slate-600 text-slate-300">
+                      <Eye className="w-4 h-4 mr-2" />
+                      Ver
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-end space-x-3 pt-6 border-t border-slate-700">
+                  <Button
+                    onClick={() => setShowSecurityModal(false)}
+                    variant="outline"
+                    className="border-slate-600 text-slate-300"
+                  >
+                    Cerrar
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      handleSaveSetting(selectedSetting);
+                      setShowSecurityModal(false);
+                    }}
+                    className="bg-gradient-to-r from-red-600 to-orange-600"
+                  >
+                    <Shield className="w-4 h-4 mr-2" />
+                    Aplicar Seguridad
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Export Modal */}
+        {showExportModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowExportModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg flex items-center justify-center">
+                    <Download className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white">Exportar Datos</h3>
+                </div>
+                <Button
+                  onClick={() => setShowExportModal(false)}
+                  variant="ghost"
+                  size="sm"
+                  className="text-slate-400 hover:text-slate-300"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="space-y-3">
+                  <Button variant="outline" className="w-full border-slate-600 text-slate-300 justify-start">
+                    <FileText className="w-4 h-4 mr-3" />
+                    Exportar como PDF
+                  </Button>
+                  <Button variant="outline" className="w-full border-slate-600 text-slate-300 justify-start">
+                    <Database className="w-4 h-4 mr-3" />
+                    Exportar como JSON
+                  </Button>
+                  <Button variant="outline" className="w-full border-slate-600 text-slate-300 justify-start">
+                    <Archive className="w-4 h-4 mr-3" />
+                    Exportar como ZIP
+                  </Button>
+                </div>
+                
+                <div className="flex items-center justify-end space-x-3 pt-6 border-t border-slate-700">
+                  <Button
+                    onClick={() => setShowExportModal(false)}
+                    variant="outline"
+                    className="border-slate-600 text-slate-300"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      console.log('Exportando datos...');
+                      setShowExportModal(false);
+                    }}
+                    className="bg-gradient-to-r from-emerald-600 to-teal-600"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Exportar
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Info Modal */}
+        {showInfoModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowInfoModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 w-full max-w-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                    <Info className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white">Información de Configuración</h3>
+                </div>
+                <Button
+                  onClick={() => setShowInfoModal(false)}
+                  variant="ghost"
+                  size="sm"
+                  className="text-slate-400 hover:text-slate-300"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <h4 className="text-lg font-semibold text-white">Características</h4>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <CheckCircle className="w-4 h-4 text-emerald-500" />
+                        <span className="text-slate-300">Configuración de perfil personalizada</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <CheckCircle className="w-4 h-4 text-emerald-500" />
+                        <span className="text-slate-300">Seguridad avanzada con 2FA</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <CheckCircle className="w-4 h-4 text-emerald-500" />
+                        <span className="text-slate-300">Notificaciones personalizables</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <CheckCircle className="w-4 h-4 text-emerald-500" />
+                        <span className="text-slate-300">Configuración de inversiones</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h4 className="text-lg font-semibold text-white">Versión</h4>
+                    <div className="space-y-2 text-slate-300">
+                      <p>Caocal v1.0.0</p>
+                      <p>Última actualización: 2024</p>
+                      <p>Compatibilidad: Web, iOS, Android</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-end pt-6 border-t border-slate-700">
+                  <Button
+                    onClick={() => setShowInfoModal(false)}
+                    className="bg-gradient-to-r from-blue-600 to-purple-600"
+                  >
+                    Entendido
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }; 

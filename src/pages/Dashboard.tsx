@@ -4,45 +4,32 @@ import { useUserData } from '@/hooks/useUserData.js';
 import { IncomeVolatilityChart } from '@components/dashboard/IncomeVolatilityChart';
 import { RecentEarnings } from '@components/dashboard/RecentEarnings';
 import { SavingsGoalMeter } from '@components/dashboard/SavingsGoalMeter';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@components/ui/Button';
 import { Card, CardContent } from '@components/ui/Card';
 import { 
   Sparkles, 
-  Target, 
-  ArrowRight, 
-  DollarSign, 
-  Star, 
   Eye, 
   EyeOff, 
-  Settings, 
-  Info, 
-  Calculator,
-  PieChart,
-  AlertCircle,
-  CheckCircle,
+  PieChart, 
   X,
-  TrendingUp,
-  BookOpen,
-  Shield,
-  Zap,
-  Users,
-  BarChart3,
-  Plus,
-  Minus,
-  Edit,
-  Trash2,
-  Download,
-  Share2,
-  Clock,
-  Calendar,
-  Bell,
-  MessageCircle,
-  ExternalLink,
-  ChevronRight,
+  Settings,
+  Star,
+  Calculator,
+  DollarSign,
+  Target,
+  ChevronUp,
   ChevronDown,
-  ChevronUp
+  CheckCircle,
+  Info,
+  AlertCircle,
+  ChevronRight,
+  ArrowRight,
+  Minus,
+  Plus,
+  Bell
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();

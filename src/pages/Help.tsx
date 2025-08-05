@@ -1,38 +1,38 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  HelpCircle, 
   Search, 
-  BookOpen, 
-  MessageCircle, 
-  Mail, 
-  Phone, 
-  Clock, 
-  ChevronDown,
-  ChevronUp,
-  Star,
-  Shield,
-  Zap,
-  Target,
-  TrendingUp,
-  DollarSign,
-  Users,
-  AlertCircle,
-  CheckCircle,
-  Info,
-  ExternalLink,
-  Download,
-  Video,
-  FileText,
-  Settings,
-  LifeBuoy,
-  Headphones,
+  Video, 
+  FileText, 
+  Headphones, 
   Bot,
-  Globe,
-  Lock,
-  Award
+  BookOpen,
+  TrendingUp,
+  Shield,
+  HelpCircle,
+  MessageCircle,
+  Mail,
+  Phone,
+  LifeBuoy,
+  AlertCircle,
+  ChevronUp,
+  ChevronDown,
+  Download,
+  Clock,
+  Award,
+  DollarSign,
+  Zap,
+  X,
+  Settings,
+  Plus,
+  Edit,
+  Trash2,
+  CheckCircle,
+  Share2,
+  Info,
+  Bookmark
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
+import { Card, CardContent } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
 
 // Datos de FAQs
@@ -163,6 +163,21 @@ export const Help: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState("todos");
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  
+  // Estados para modales
+  const [showFaqModal, setShowFaqModal] = useState(false);
+  const [showResourceModal, setShowResourceModal] = useState(false);
+  const [showSupportModal, setShowSupportModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showCreateFaqModal, setShowCreateFaqModal] = useState(false);
+  const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  
+  // Estados para datos seleccionados
+  const [selectedFaq, setSelectedFaq] = useState<any>(null);
+  const [selectedResource, setSelectedResource] = useState<any>(null);
+  const [selectedSupport, setSelectedSupport] = useState<any>(null);
 
   const filteredFaqs = faqs.filter(faq => {
     const matchesCategory = selectedCategory === "todos" || faq.category === selectedCategory;
@@ -185,6 +200,82 @@ export const Help: React.FC = () => {
       case 'medium': return 'Medium';
       default: return 'Low';
     }
+  };
+
+  // Funciones de manejo para botones interactivos
+  const handleFaqClick = (faq: any) => {
+    setSelectedFaq(faq);
+    setShowFaqModal(true);
+  };
+
+  const handleResourceClick = (resource: any) => {
+    setSelectedResource(resource);
+    setShowResourceModal(true);
+  };
+
+  const handleSupportClick = (support: any) => {
+    setSelectedSupport(support);
+    setShowSupportModal(true);
+  };
+
+  const handleSettingsClick = () => {
+    setShowSettingsModal(true);
+  };
+
+  const handleCreateFaq = () => {
+    setShowCreateFaqModal(true);
+  };
+
+  const handleAnalyticsClick = () => {
+    setShowAnalyticsModal(true);
+  };
+
+  const handleDownloadReport = () => {
+    setShowReportModal(true);
+  };
+
+  const handleInfoClick = () => {
+    setShowInfoModal(true);
+  };
+
+  const handleBookmarkFaq = (faq: any) => {
+    console.log('FAQ guardada:', faq.title);
+  };
+
+  const handleShareFaq = (faq: any) => {
+    console.log('Compartir FAQ:', faq.title);
+  };
+
+  const handleEditFaq = (faq: any) => {
+    console.log('Editar FAQ:', faq.title);
+  };
+
+  const handleDeleteFaq = (faq: any) => {
+    console.log('Eliminar FAQ:', faq.title);
+  };
+
+  const handleDownloadResource = (resource: any) => {
+    console.log('Descargar recurso:', resource.title);
+  };
+
+  const handleShareResource = (resource: any) => {
+    console.log('Compartir recurso:', resource.title);
+  };
+
+  const handleEditResource = (resource: any) => {
+    console.log('Editar recurso:', resource.title);
+  };
+
+  const handleDeleteResource = (resource: any) => {
+    console.log('Eliminar recurso:', resource.title);
+  };
+
+  const handleStartChat = () => {
+    console.log('Iniciar chat de soporte');
+  };
+
+  const handleSendEmail = () => {
+    console.log('Enviar email de soporte');
   };
 
   return (
@@ -262,7 +353,10 @@ export const Help: React.FC = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="h-full bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-all duration-300 hover:shadow-xl relative">
+                <Card 
+                  className="h-full bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-all duration-300 hover:shadow-xl relative cursor-pointer"
+                  onClick={() => handleSupportClick(channel)}
+                >
                   <CardContent className="p-6 text-center">
                     {/* Priority Indicator */}
                     <div className="absolute top-3 right-3">
@@ -308,6 +402,61 @@ export const Help: React.FC = () => {
               <br />
               <span className="text-white">Frecuentes</span>
             </h2>
+          </motion.div>
+
+          {/* Header con botones de acción */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="flex flex-wrap justify-center gap-4 mb-8"
+          >
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSettingsClick}
+              className="border-slate-600 text-slate-300 hover:bg-slate-800"
+            >
+              <Settings className="w-4 h-4 mr-2" />
+              Configuración
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleAnalyticsClick}
+              className="border-slate-600 text-slate-300 hover:bg-slate-800"
+            >
+              <TrendingUp className="w-4 h-4 mr-2" />
+              Análisis
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleDownloadReport}
+              className="border-slate-600 text-slate-300 hover:bg-slate-800"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Reporte
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleInfoClick}
+              className="border-slate-600 text-slate-300 hover:bg-slate-800"
+            >
+              <Info className="w-4 h-4 mr-2" />
+              Información
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCreateFaq}
+              className="border-slate-600 text-slate-300 hover:bg-slate-800"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Nueva FAQ
+            </Button>
           </motion.div>
 
           {/* Category Filters */}
@@ -357,12 +506,33 @@ export const Help: React.FC = () => {
                       </div>
                     </div>
                     
-                    <div className="flex items-center justify-between cursor-pointer" onClick={() => setExpandedFaq(expandedFaq === faq.id ? null : faq.id)}>
-                      <h3 className="text-lg font-semibold text-white pr-8">{faq.question}</h3>
+                    <div className="flex items-center justify-between">
+                      <div 
+                        className="flex-1 cursor-pointer" 
+                        onClick={() => setExpandedFaq(expandedFaq === faq.id ? null : faq.id)}
+                      >
+                        <h3 className="text-lg font-semibold text-white pr-8">{faq.question}</h3>
+                      </div>
                       <div className="flex items-center space-x-2">
                         <span className="text-slate-400 text-sm bg-slate-700 px-2 py-1 rounded-full">
                           {categories.find(c => c.id === faq.category)?.name}
                         </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleFaqClick(faq)}
+                          className="text-slate-400 hover:text-white"
+                        >
+                          <Info className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleBookmarkFaq(faq)}
+                          className="text-slate-400 hover:text-white"
+                        >
+                          <Bookmark className="w-4 h-4" />
+                        </Button>
                         {expandedFaq === faq.id ? (
                           <ChevronUp className="w-5 h-5 text-slate-400" />
                         ) : (
@@ -444,10 +614,26 @@ export const Help: React.FC = () => {
                     <h3 className="text-lg font-semibold text-white mb-2">{resource.title}</h3>
                     <p className="text-slate-300 leading-relaxed mb-4">{resource.description}</p>
                     
-                    <Button variant="outline" size="sm" className="w-full border-slate-600 text-slate-300 hover:bg-slate-800">
-                      <Download className="w-4 h-4 mr-2" />
-                      Descargar
-                    </Button>
+                    <div className="flex space-x-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-800"
+                        onClick={() => handleResourceClick(resource)}
+                      >
+                        <Info className="w-4 h-4 mr-2" />
+                        Ver
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-800"
+                        onClick={() => handleDownloadResource(resource)}
+                      >
+                        <Download className="w-4 h-4 mr-2" />
+                        Descargar
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -482,11 +668,20 @@ export const Help: React.FC = () => {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold">
+                  <Button 
+                    size="lg" 
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold"
+                    onClick={handleStartChat}
+                  >
                     <MessageCircle className="w-5 h-5 mr-2" />
                     <span>Iniciar Chat</span>
                   </Button>
-                  <Button variant="outline" size="lg" className="border-slate-600 text-slate-300 hover:bg-slate-800 px-8 py-4 text-lg">
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="border-slate-600 text-slate-300 hover:bg-slate-800 px-8 py-4 text-lg"
+                    onClick={handleSendEmail}
+                  >
                     <Mail className="w-5 h-5 mr-2" />
                     <span>Enviar Email</span>
                   </Button>
@@ -511,6 +706,643 @@ export const Help: React.FC = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Modales */}
+      
+      {/* FAQ Modal */}
+      <AnimatePresence>
+        {showFaqModal && selectedFaq && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowFaqModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-white">Detalles de FAQ</h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowFaqModal(false)}
+                  className="text-slate-400 hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-2">{selectedFaq.question}</h3>
+                  <p className="text-slate-300 leading-relaxed">{selectedFaq.answer}</p>
+                </div>
+                
+                <div className="flex items-center space-x-4 text-sm text-slate-400">
+                  <span>Categoría: {categories.find(c => c.id === selectedFaq.category)?.name}</span>
+                  <span>Prioridad: {getPriorityText(selectedFaq.priority)}</span>
+                </div>
+                
+                <div className="flex space-x-2 pt-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleBookmarkFaq(selectedFaq)}
+                    className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                  >
+                    <Bookmark className="w-4 h-4 mr-2" />
+                    Guardar
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleShareFaq(selectedFaq)}
+                    className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                  >
+                    <Share2 className="w-4 h-4 mr-2" />
+                    Compartir
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleEditFaq(selectedFaq)}
+                    className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                  >
+                    <Edit className="w-4 h-4 mr-2" />
+                    Editar
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDeleteFaq(selectedFaq)}
+                    className="border-red-600 text-red-400 hover:bg-red-900/20"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Eliminar
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Resource Modal */}
+      <AnimatePresence>
+        {showResourceModal && selectedResource && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowResourceModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-white">Detalles del Recurso</h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowResourceModal(false)}
+                  className="text-slate-400 hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                    <div className="text-white">
+                      {selectedResource.icon}
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-white">{selectedResource.title}</h3>
+                    <p className="text-slate-400">{selectedResource.description}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-4 text-sm text-slate-400">
+                  <span>Tipo: {selectedResource.type.toUpperCase()}</span>
+                  <span>Prioridad: {getPriorityText(selectedResource.priority)}</span>
+                </div>
+                
+                <div className="flex space-x-2 pt-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDownloadResource(selectedResource)}
+                    className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Descargar
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleShareResource(selectedResource)}
+                    className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                  >
+                    <Share2 className="w-4 h-4 mr-2" />
+                    Compartir
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleEditResource(selectedResource)}
+                    className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                  >
+                    <Edit className="w-4 h-4 mr-2" />
+                    Editar
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDeleteResource(selectedResource)}
+                    className="border-red-600 text-red-400 hover:bg-red-900/20"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Eliminar
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Support Modal */}
+      <AnimatePresence>
+        {showSupportModal && selectedSupport && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowSupportModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-white">Canal de Soporte</h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowSupportModal(false)}
+                  className="text-slate-400 hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                    <div className="text-white">
+                      {selectedSupport.icon}
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-white">{selectedSupport.title}</h3>
+                    <p className="text-slate-400">{selectedSupport.description}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-4 text-sm text-slate-400">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                    <span>{selectedSupport.status}</span>
+                  </div>
+                  <span>Tiempo de respuesta: {selectedSupport.responseTime}</span>
+                </div>
+                
+                <div className="flex space-x-2 pt-4">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  >
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Contactar
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                  >
+                    <Info className="w-4 h-4 mr-2" />
+                    Más Info
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Settings Modal */}
+      <AnimatePresence>
+        {showSettingsModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowSettingsModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 max-w-md w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-white">Configuración de Ayuda</h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowSettingsModal(false)}
+                  className="text-slate-400 hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-slate-300">Idioma preferido</label>
+                  <select className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white">
+                    <option>Español</option>
+                    <option>English</option>
+                  </select>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-slate-300">Notificaciones</label>
+                  <div className="space-y-2">
+                    <label className="flex items-center space-x-2">
+                      <input type="checkbox" className="rounded" />
+                      <span className="text-sm text-slate-300">Nuevas FAQs</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="checkbox" className="rounded" />
+                      <span className="text-sm text-slate-300">Actualizaciones de recursos</span>
+                    </label>
+                  </div>
+                </div>
+                
+                <div className="flex space-x-2 pt-4">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  >
+                    Guardar
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowSettingsModal(false)}
+                    className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Create FAQ Modal */}
+      <AnimatePresence>
+        {showCreateFaqModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowCreateFaqModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-white">Nueva FAQ</h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowCreateFaqModal(false)}
+                  className="text-slate-400 hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-slate-300">Pregunta</label>
+                  <input
+                    type="text"
+                    className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white"
+                    placeholder="Escribe la pregunta..."
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-slate-300">Respuesta</label>
+                  <textarea
+                    className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white h-32"
+                    placeholder="Escribe la respuesta..."
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-slate-300">Categoría</label>
+                  <select className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white">
+                    <option>Inversiones</option>
+                    <option>Seguridad</option>
+                    <option>Comisiones</option>
+                    <option>Retiros</option>
+                    <option>Tecnología</option>
+                  </select>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-slate-300">Prioridad</label>
+                  <select className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white">
+                    <option>Alta</option>
+                    <option>Media</option>
+                    <option>Baja</option>
+                  </select>
+                </div>
+                
+                <div className="flex space-x-2 pt-4">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Crear FAQ
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowCreateFaqModal(false)}
+                    className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Analytics Modal */}
+      <AnimatePresence>
+        {showAnalyticsModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowAnalyticsModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-white">Análisis de Ayuda</h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowAnalyticsModal(false)}
+                  className="text-slate-400 hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                <Card className="bg-slate-700/50 border-slate-600">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-semibold text-white mb-4">Estadísticas Generales</h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-slate-300">Total FAQs</span>
+                        <span className="text-white font-semibold">6</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-300">Recursos descargados</span>
+                        <span className="text-white font-semibold">1,247</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-300">Chats iniciados</span>
+                        <span className="text-white font-semibold">892</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-300">Tiempo promedio de respuesta</span>
+                        <span className="text-white font-semibold">1.8 min</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="bg-slate-700/50 border-slate-600">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-semibold text-white mb-4">FAQs Más Populares</h3>
+                    <div className="space-y-3">
+                      {faqs.slice(0, 3).map((faq, index) => (
+                        <div key={faq.id} className="flex justify-between items-center">
+                          <span className="text-slate-300 text-sm">{index + 1}. {faq.question.substring(0, 40)}...</span>
+                          <span className="text-white font-semibold text-sm">{Math.floor(Math.random() * 100) + 50} vistas</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Report Modal */}
+      <AnimatePresence>
+        {showReportModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowReportModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 max-w-md w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-white">Descargar Reporte</h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowReportModal(false)}
+                  className="text-slate-400 hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-slate-300">Formato</label>
+                  <select className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white">
+                    <option>PDF</option>
+                    <option>Excel</option>
+                    <option>CSV</option>
+                  </select>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-slate-300">Período</label>
+                  <select className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white">
+                    <option>Último mes</option>
+                    <option>Último trimestre</option>
+                    <option>Último año</option>
+                    <option>Personalizado</option>
+                  </select>
+                </div>
+                
+                <div className="flex space-x-2 pt-4">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Descargar
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowReportModal(false)}
+                    className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Info Modal */}
+      <AnimatePresence>
+        {showInfoModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowInfoModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-slate-800 rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-white">Acerca del Centro de Ayuda</h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowInfoModal(false)}
+                  className="text-slate-400 hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-2">Nuestra Misión</h3>
+                  <p className="text-slate-300 leading-relaxed">
+                    Proporcionar soporte excepcional y recursos educativos para que nuestros usuarios 
+                    maximicen su experiencia con Caocal y alcancen sus objetivos financieros.
+                  </p>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-2">Características</h3>
+                  <ul className="space-y-2 text-slate-300">
+                    <li className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-emerald-500" />
+                      <span>Soporte 24/7 disponible</span>
+                    </li>
+                    <li className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-emerald-500" />
+                      <span>Respuesta en menos de 2 minutos</span>
+                    </li>
+                    <li className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-emerald-500" />
+                      <span>Expertos certificados en finanzas</span>
+                    </li>
+                    <li className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-emerald-500" />
+                      <span>Recursos actualizados regularmente</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-2">Contacto</h3>
+                  <div className="space-y-2 text-slate-300">
+                    <p>Email: soporte@caocal.mx</p>
+                    <p>Teléfono: +52 55 1234 5678</p>
+                    <p>Horario: 24/7</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }; 
