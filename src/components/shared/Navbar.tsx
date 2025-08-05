@@ -43,13 +43,6 @@ const navSections: NavSection[] = [
     title: 'Principal',
     items: [
       {
-        id: 'home',
-        label: 'Inicio',
-        path: '/',
-        icon: Home,
-        description: 'Landing page principal'
-      },
-      {
         id: 'dashboard',
         label: 'Dashboard',
         path: '/dashboard',
@@ -203,6 +196,36 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
+      {/* Banner de Advertencia Legal */}
+      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-2 px-4 shadow-lg">
+        <div className="container mx-auto">
+          {/* Desktop Version */}
+          <div className="hidden lg:flex items-center justify-center space-x-2">
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium">
+              ⚠️ <strong>DEMO EXPERIMENTAL</strong> - Caocal es un proyecto en desarrollo y testing. 
+              No está regulado por autoridades financieras mexicanas y no procesa transacciones reales. 
+              Únicamente para fines educativos y demostrativos.
+            </span>
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+          </div>
+          
+          {/* Mobile Version */}
+          <div className="lg:hidden">
+            <div className="flex items-center justify-center space-x-1 mb-1">
+              <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
+              <span className="font-bold text-xs">⚠️ DEMO EXPERIMENTAL</span>
+              <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
+            </div>
+            <div className="text-center leading-tight">
+              <span className="text-xs font-medium">
+                Caocal es un proyecto en desarrollo y testing. No está regulado por autoridades financieras mexicanas y no procesa transacciones reales. Únicamente para fines educativos y demostrativos.
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Navbar Desktop */}
       <nav className={`hidden lg:block sticky top-0 z-50 transition-all duration-500 ${
         isScrolled 
@@ -212,7 +235,7 @@ export const Navbar: React.FC = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
-            <div className="flex items-center space-x-4 flex-shrink-0">
+            <Link to="/" className="flex items-center space-x-4 flex-shrink-0 hover:opacity-80 transition-opacity duration-200 cursor-pointer">
               <div className="relative">
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/25 animate-float">
                   <Sparkles className="w-6 h-6 text-white" />
@@ -223,10 +246,23 @@ export const Navbar: React.FC = () => {
                 <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Caocal</span>
                 <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Wealth as a Service</span>
               </div>
-            </div>
+            </Link>
 
             {/* Navegación Desktop */}
             <div className="flex items-center space-x-2 flex-1 justify-center">
+              {/* Botón Inicio independiente */}
+              <Link
+                to="/"
+                className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl transition-all duration-300 ${
+                  isActive('/')
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/50 dark:hover:bg-slate-800/50'
+                }`}
+              >
+                <Home className="w-4 h-4 flex-shrink-0" />
+                <span className="font-medium">Inicio</span>
+              </Link>
+
               {navSections.map((section) => (
                 <div key={section.id} className="relative">
                   <Button
@@ -300,6 +336,8 @@ export const Navbar: React.FC = () => {
         </div>
       </nav>
 
+
+
       {/* Navbar Mobile */}
       <nav className={`lg:hidden sticky top-0 z-50 transition-all duration-500 ${
         isScrolled 
@@ -309,7 +347,7 @@ export const Navbar: React.FC = () => {
         <div className="container mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16">
             {/* Logo Mobile */}
-            <div className="flex items-center space-x-3 flex-shrink-0">
+            <Link to="/" className="flex items-center space-x-3 flex-shrink-0 hover:opacity-80 transition-opacity duration-200 cursor-pointer">
               <div className="relative">
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
                   <Sparkles className="w-5 h-5 text-white" />
@@ -317,7 +355,7 @@ export const Navbar: React.FC = () => {
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full animate-pulse-slow border-2 border-white dark:border-slate-900"></div>
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Caocal</span>
-            </div>
+            </Link>
 
             {/* Botón de menú móvil */}
             <Button
@@ -346,6 +384,25 @@ export const Navbar: React.FC = () => {
               className="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 overflow-hidden"
             >
               <div className="container mx-auto px-4 sm:px-6 py-8 space-y-8">
+                {/* Botón Inicio independiente en móvil */}
+                <div className="space-y-4">
+                  <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide px-2">
+                    Navegación
+                  </h3>
+                  <div className="space-y-2">
+                    <NavItemComponent 
+                      item={{
+                        id: 'home',
+                        label: 'Inicio',
+                        path: '/',
+                        icon: Home,
+                        description: 'Landing page principal'
+                      }} 
+                      isMobile 
+                    />
+                  </div>
+                </div>
+
                 {/* Secciones del menú móvil */}
                 {navSections.map((section) => (
                   <div key={section.id} className="space-y-4">
