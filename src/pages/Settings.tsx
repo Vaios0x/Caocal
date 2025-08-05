@@ -39,8 +39,8 @@ const profileSettings = [
     title: 'Información Personal',
     icon: <User className="w-6 h-6" />,
     items: [
-      { label: 'Nombre completo', value: 'Giovanny Amador', type: 'text', priority: 'high' },
-      { label: 'Email', value: 'giovanny@caocal.mx', type: 'email', priority: 'high' },
+      { label: 'Nombre completo', value: 'Vaios0x', type: 'text', priority: 'high' },
+      { label: 'Email', value: 'vaios0x@caocal.mx', type: 'email', priority: 'high' },
       { label: 'Teléfono', value: '+52 55 1234 5678', type: 'tel', priority: 'medium' },
       { label: 'Fecha de nacimiento', value: '15/03/1990', type: 'date', priority: 'medium' },
       { label: 'Dirección', value: 'Ciudad de México, CDMX', type: 'text', priority: 'low' }
@@ -659,7 +659,7 @@ export const SettingsPage: React.FC = () => {
                     <label className="text-sm font-medium text-slate-300">Nombre completo</label>
                     <input
                       type="text"
-                      defaultValue="Giovanny Amador"
+                      defaultValue="Vaios0x"
                       className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
                     />
                   </div>

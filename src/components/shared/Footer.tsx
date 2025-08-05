@@ -7,7 +7,6 @@ import {
   Zap, 
   TrendingUp, 
   Mail, 
-  Phone, 
   MapPin, 
   ExternalLink,
   Github,
@@ -163,12 +162,8 @@ export const Footer: React.FC = () => {
                 <span className="font-medium">hola@caocal.mx</span>
               </div>
               <div className="flex items-center space-x-3 text-sm text-slate-600 dark:text-slate-400">
-                <Phone className="w-4 h-4 text-blue-500" />
-                <span className="font-medium">+52 55 1234 5678</span>
-              </div>
-              <div className="flex items-center space-x-3 text-sm text-slate-600 dark:text-slate-400">
                 <MapPin className="w-4 h-4 text-blue-500" />
-                <span className="font-medium">CDMX, México</span>
+                <span className="font-medium">México</span>
               </div>
             </div>
 
@@ -218,7 +213,7 @@ export const Footer: React.FC = () => {
             {/* Copyright y enlaces legales */}
             <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 text-sm text-slate-600 dark:text-slate-400">
               <p className="font-medium">
-                © {currentYear} Caocal. Hecho con <Heart className="w-4 h-4 text-red-500 inline" /> en México
+                © {currentYear} Caocal. Hecho con <Heart className="w-4 h-4 text-red-500 inline" /> en México. Todos los derechos reservados.
               </p>
               <div className="flex items-center space-x-4">
                 <Link 
@@ -265,6 +260,36 @@ export const Footer: React.FC = () => {
             <span className="font-medium">
               Tu información está protegida con encriptación de nivel bancario
             </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Banner de Advertencia Legal - Footer */}
+      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-2 px-4 shadow-lg">
+        <div className="container mx-auto">
+          {/* Desktop Version */}
+          <div className="hidden lg:flex items-center justify-center space-x-2">
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium">
+              ⚠️ <strong>DEMO EXPERIMENTAL</strong> - Caocal es un proyecto en desarrollo y testing. 
+              No está regulado por autoridades financieras mexicanas y no procesa transacciones reales. 
+              Únicamente para fines educativos y demostrativos.
+            </span>
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+          </div>
+          
+          {/* Mobile Version */}
+          <div className="lg:hidden">
+            <div className="flex items-center justify-center space-x-1 mb-1">
+              <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
+              <span className="font-bold text-xs">⚠️ DEMO EXPERIMENTAL</span>
+              <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
+            </div>
+            <div className="text-center leading-tight">
+              <span className="text-xs font-medium">
+                Caocal es un proyecto en desarrollo y testing. No está regulado por autoridades financieras mexicanas y no procesa transacciones reales. Únicamente para fines educativos y demostrativos.
+              </span>
+            </div>
           </div>
         </div>
       </div>

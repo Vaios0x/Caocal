@@ -384,6 +384,28 @@ export const Navbar: React.FC = () => {
               className="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 overflow-hidden"
             >
               <div className="container mx-auto px-4 sm:px-6 py-8 space-y-8">
+                {/* Perfil del usuario en móvil */}
+                {user && typeof user === 'object' && 'name' in user && (
+                  <div className="flex items-center space-x-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-700 rounded-2xl border border-blue-200 dark:border-slate-600">
+                    <div className="relative">
+                      <img
+                        src={user.avatarUrl}
+                        alt={user.name}
+                        className="w-12 h-12 rounded-xl object-cover ring-2 ring-blue-500/20 hover:ring-blue-500/40 transition-all duration-300 shadow-lg"
+                      />
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-900"></div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white truncate">{user.name}</h3>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{user.role}</p>
+                    </div>
+                    <Button variant="ghost" size="sm" className="relative p-2.5 rounded-xl">
+                      <Bell className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse-slow border-2 border-white dark:border-slate-900"></div>
+                    </Button>
+                  </div>
+                )}
+
                 {/* Botón Inicio independiente en móvil */}
                 <div className="space-y-4">
                   <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide px-2">

@@ -12,6 +12,9 @@ import { Education } from '@/pages/Education';
 import { Calculators } from '@/pages/Calculators';
 import { Help } from '@/pages/Help';
 import { SettingsPage } from '@/pages/Settings';
+import { Privacy } from '@/pages/Privacy';
+import { Terms } from '@/pages/Terms';
+import { Cookies } from '@/pages/Cookies';
 
 export const AppRouter = createBrowserRouter([
   {
@@ -65,6 +68,18 @@ export const AppRouter = createBrowserRouter([
       {
         path: 'settings',
         element: <SettingsPage />
+      },
+      {
+        path: 'privacy',
+        element: <Privacy />
+      },
+      {
+        path: 'terms',
+        element: <Terms />
+      },
+      {
+        path: 'cookies',
+        element: <Cookies />
       }
     ]
   }

@@ -43,9 +43,9 @@ export interface Portfolio {
 }
 
 export const mockUser: User = {
-  name: 'Giovanny Amador',
-  avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-  email: 'giovanny.amador@caocal.mx',
+  name: 'Vaios0x',
+  avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
+  email: 'vaios0x@caocal.mx',
   role: 'Usuario Premium',
   status: 'online',
   memberSince: '2024-01-15',
